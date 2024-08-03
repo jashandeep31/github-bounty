@@ -19,4 +19,9 @@ const webhookMiddleware = createNodeMiddleware(octokitApp.webhooks, {
 
 octokitApp.webhooks.on("pull_request.reopened", () => console.log(`first`));
 
+// Tasks I have to hanle
+// 1. create a new task contain /bounty $5
+// 2. somebody create a pull request in which comment /give-bounty $5 @username
+// 3. catch every comment on the issue or the pull request
+
 export { webhookMiddleware };
