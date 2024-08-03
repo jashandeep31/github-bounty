@@ -36,7 +36,6 @@
     "./globals.css": "./src/globals.css",
     "./postcss.config": "./postcss.config.mjs",
     "./tailwind.config": "./tailwind.config.ts",
-    "./global.css": "./src/lib/utils.ts",
     "./utils": "./src/lib/utils.ts",
     "./button": "./src/components/ui/button.tsx"
   }
