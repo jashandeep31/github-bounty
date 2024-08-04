@@ -37,6 +37,7 @@
     "./postcss.config": "./postcss.config.mjs",
     "./tailwind.config": "./tailwind.config.ts",
     "./utils": "./src/lib/utils.ts",
-    "./button": "./src/components/ui/button.tsx"
+    "./button": "./src/components/ui/button.tsx",
+    "./table": "./src/components/ui/table.tsx"
   }
 }

@@ -46,17 +46,20 @@ model Session {
 }
 
 model User {
-  id            String         @id @default(cuid())
-  name          String?
-  email         String?        @unique
-  emailVerified DateTime?      @map("email_verified")
-  image         String?
-  username      String         @unique
-  accounts      Account[]
-  sessions      Session[]
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  Organization  Organization[]
+  id                String              @id @default(cuid())
+  name              String?
+  email             String?             @unique
+  emailVerified     DateTime?           @map("email_verified")
+  image             String?
+  username          String              @unique
+  accounts          Account[]
+  sessions          Session[]
+  publicKey         String?
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  Organization      Organization?
+  Payment           Payment[]
+  WalletTransaction WalletTransaction[]
 
   @@map("users")
 }
@@ -74,14 +77,154 @@ model VerificationToken {
 
 // organization is just for the REF these are the accounts or model those are going to contain teh user own , name who can send moeny and total money they have in usd to spend 
 model Organization {
-  id                String   @id @default(uuid())
-  name              String   @unique // same the user name 
+  id                String              @id @default(uuid())
+  name              String              @unique // same the user name 
+  image             String?
   email             String // to send emails of bounties and etc
   balance           Float
-  userId            String
+  userId            String              @unique
+  user              User                @relation(fields: [userId], references: [id])
   allowedDispancers String[]
+  publicKey         String?
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  Payout            Payout[]
+  Payment           Payment[]
+  WalletTransaction WalletTransaction[]
+  Issue             Issue[]
+  Repo              Repo[]
+}
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  user      User     @relation(fields: [userId], references: [id])
+// ISSUE means either a issue or a pull request that opened --> 
+// --> if link issue of pull issue is present then just create a payout of that amount 
+
+model Repo {
+  id             String       @id @default(uuid())
+  reponame       String       @unique
+  link           String
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  Issue          Issue[]
+  totalIssues    Int
+}
+
+model Issue {
+  id             String          @id @default(uuid())
+  link           String          @unique
+  title          String
+  body           String
+  organization   Organization    @relation(fields: [organizationId], references: [id])
+  organizationId String
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  status         IssueStatusEnum
+  Payout         Payout[]
+  Bounty         Bounty[]
+  repoId         String
+  repo           Repo            @relation(fields: [repoId], references: [id])
+  bountiesPrice  Int
+}
+
+enum IssueStatusEnum {
+  OPEN
+  CLOSED
+}
+
+// this keeps track of bounties in the issue like maitainer posted 2 times-> rare case bounty $100 bounty$200 in messsage then we will show sum up in the 
+model Bounty {
+  id          String   @id @default(uuid())
+  amount      Float
+  generatedBy String // username of who created or commented so easily identified if someone make fake
+  issueId     String
+  issue       Issue    @relation(fields: [issueId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  isOpen      Boolean  @default(true)
+}
+
+// only the payout from the maintainer to the users or the contributers
+model Payout {
+  id             String       @id @default(uuid())
+  organizationId String
+  from           Organization @relation(fields: [organizationId], references: [id])
+  generatedTo    String // username in string format of who is winner
+  generatedBy    String // username of who created or commented so easily identified if someone make fake
+  link           String // link to that comment that enabled the payout
+  amount         Float
+  status         PayoutEnum   @default(PRE_PROCESSING)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  issue          Issue        @relation(fields: [issueId], references: [id])
+  issueId        String
+  paymentId      String       @unique // to take the ref  of the payment
+  payment        Payment      @relation(fields: [paymentId], references: [id])
+}
+
+enum PayoutEnum {
+  PRE_PROCESSING
+  UNCOLLECTED
+  REVERSED
+  COLLECTED
+  FAILED // EXP CASE
+}
+
+model Payment {
+  id String @id @default(uuid())
+
+  // user whom had sent the payment 
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  organizationId String
+
+  // user who had collected payment 
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  // Initial amount sent by the user
+  initialAmount Float
+
+  // Charges applied to the payment (ranging from $0.10 to $1.00)
+  charges Float
+
+  // Amount transferred to the end user after charges
+  transferredAmount Float
+
+  signature     String   @unique
+  paidToCompany Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  body   String? // store the transaction in the formal way  to human readable way
+  refund Boolean @default(false)
+
+  // canbe wallet transaction linked on can be not but make sure to link with each
+  WalletTransaction WalletTransaction?
+  Payout            Payout?
+}
+
+// personal tracking usecase only
+// middle man is always a wallet so just considering the wallet their not need to payer to know will switch to CREDIT and DEPOSIT
+// ! CREDIT- When user pays us , also then link organization  DEBIT- When we paid a user for the bounty link user who get payment
+model WalletTransaction {
+  id                String                @id @default(uuid())
+  type              WalletTransactionEnum
+  organization      Organization?         @relation(fields: [organizationId], references: [id])
+  user              User?                 @relation(fields: [userId], references: [id])
+  amount            Float
+  totalWalletAmount Float
+  signature         String                @unique
+  updatedAt         DateTime              @updatedAt
+  createdAt         DateTime              @default(now())
+  paymentId         String                @unique
+  payment           Payment               @relation(fields: [paymentId], references: [id])
+  body              String? // store the transaction in the formal way  to human readable way
+  organizationId    String?
+  userId            String?
+  refund            Boolean               @default(false)
+}
+
+enum WalletTransactionEnum {
+  CREDIT
+  DEBIT
 }

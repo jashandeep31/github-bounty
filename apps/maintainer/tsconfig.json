@@ -6,7 +6,9 @@
         "name": "next"
       }
     ],
-
+    //! modle resolution is udpatded to solve error of auth.ts
+    "declaration": false,
+    "declarationMap": false,
     "strictNullChecks": true,
     "paths": {
       "@/*": ["./*"]
@@ -17,7 +19,8 @@
     "next.config.js",
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "./types/next-auth.d.ts"
   ],
   "exclude": ["node_modules"]
 }
