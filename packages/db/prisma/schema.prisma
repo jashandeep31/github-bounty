@@ -91,6 +91,7 @@ model Organization {
   Payout            Payout[]
   Payment           Payment[]
   WalletTransaction WalletTransaction[]
+  // ! be carefull wornglye issue is started with capital I
   Issue             Issue[]
   Repo              Repo[]
 }

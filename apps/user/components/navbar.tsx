@@ -7,7 +7,7 @@ const navbarDesktopLinks: { name: string; link: string }[] = [
   { name: "About Us", link: "/about" },
 ];
 
-export default function Navbar() {
+export default async function Navbar() {
   return (
     <div className="py-3">
       <div className="container flex items-center justify-between">

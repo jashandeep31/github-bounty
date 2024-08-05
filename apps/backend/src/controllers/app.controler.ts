@@ -8,9 +8,7 @@ export const checkStatus = async (req: Request, res: Response) => {
   try {
     if (typeof params.user !== "string" || typeof params.repo !== "string")
       return;
-    console.log(
-      `https://api.github.com/repos/${params.user}/${params.repo}/installation`
-    );
+
     const apiRes = await axios.get(
       `https://api.github.com/repos/${params.user}/${params.repo}/installation`,
       {
@@ -20,14 +18,21 @@ export const checkStatus = async (req: Request, res: Response) => {
       }
     );
     if (apiRes.status === 200) {
-      await db.repo.create({
-        data: {
+      const isRepo = await db.repo.findUnique({
+        where: {
           reponame: params.user + "/" + params.repo,
-          link: "",
-          organizationId: "",
-          totalIssues: 0,
         },
       });
+      if (!isRepo) {
+        await db.repo.create({
+          data: {
+            reponame: params.user + "/" + params.repo,
+            link: `https://github.com/${params.user}/${params.repo}`,
+            organizationId: "57db0784-2eba-4c4f-8a83-7c808c09b3c6",
+            totalIssues: 0,
+          },
+        });
+      }
       return res.status(200).json({
         message: "App is installed",
       });

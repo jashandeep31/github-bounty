@@ -40,7 +40,7 @@ async function page() {
         className={cn(buttonVariants(), "my-4")}
         href={"/dashboard/manage-repos"}
       >
-        Add Repo
+        Manage Repos
       </Link>
       <Table className="mt-3">
         <TableCaption>A list of your public repos.</TableCaption>
@@ -48,7 +48,7 @@ async function page() {
           <TableRow>
             <TableHead className="w-[100px]">S.no</TableHead>
             <TableHead>Name</TableHead>
-            <TableHead>Private</TableHead>
+            <TableHead>Connected</TableHead>
             <TableHead className="text-right">Status</TableHead>
           </TableRow>
         </TableHeader>
@@ -65,11 +65,24 @@ async function page() {
                   {repo.reponame}
                 </Link>
               </TableCell>
-              <TableCell></TableCell>
+              <TableCell>
+                <div className="flex items-center gap-1">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                  </span>
+                  <span>Connected</span>
+                </div>
+              </TableCell>
               <TableCell className="text-right">
-                <Button variant={"outline"} size={"sm"}>
-                  Install
-                </Button>
+                <Link
+                  className={cn(
+                    buttonVariants({ variant: "outline", size: "sm" })
+                  )}
+                  href={`/dashboard/repo/${repo.reponame}`}
+                >
+                  Details
+                </Link>
               </TableCell>
             </TableRow>
           ))}

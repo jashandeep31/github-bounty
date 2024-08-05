@@ -37,7 +37,6 @@ const ReposTable = ({
   useEffect(() => {
     getUserRepos();
   }, [getUserRepos]);
-
   return (
     <div>
       <Table className="mt-3">
@@ -56,7 +55,9 @@ const ReposTable = ({
               repo={repo}
               key={index}
               index={index}
-              inSync={userRepos.some((item) => item.reponame === repo.name)}
+              inSync={userRepos.some(
+                (item) => item.reponame === `${repo.full_name}`
+              )}
               session={session}
             />
           ))}
