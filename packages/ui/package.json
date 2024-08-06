@@ -43,6 +43,6 @@
     "./button": "./src/components/ui/button.tsx",
     "./dialog": "./src/components/ui/dialog.tsx",
     "./table": "./src/components/ui/table.tsx",
-    "./sooner": "./src/components/ui/sooner.tsx"
+    "./input": "./src/components/ui/input.tsx"
   }
 }

@@ -179,8 +179,8 @@ model Payment {
   organizationId String
 
   // user who had collected payment 
-  user   User   @relation(fields: [userId], references: [id])
-  userId String
+  user   User?   @relation(fields: [userId], references: [id])
+  userId String?
 
   // Initial amount sent by the user
   initialAmount Float

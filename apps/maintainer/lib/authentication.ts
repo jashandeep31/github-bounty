@@ -53,9 +53,12 @@ const combinedBasicSchemaWithPublicInOrg = combinedBasicSchema.extend({
     publicKey: z.string(), // publicKey is required and non-nullable
   }),
 });
+export type IVerifyUserBasicAuthAndProperOrganization = z.infer<
+  typeof combinedBasicSchemaWithPublicInOrg
+>;
 export function verifyUserBasicAuthAndProperOrganization(
   session: Session
-): z.infer<typeof combinedBasicSchemaWithPublicInOrg> | null {
+): IVerifyUserBasicAuthAndProperOrganization | null {
   try {
     const validationResult = combinedBasicSchemaWithPublicInOrg.parse(session);
     return validationResult;
@@ -63,26 +66,3 @@ export function verifyUserBasicAuthAndProperOrganization(
     return null;
   }
 }
-
-// {
-//     "user": {
-//         "name": "Jashandeep Singh",
-//         "email": "jashandeep1659@gmail.com",
-//         "image": "https://avatars.githubusercontent.com/u/93036882?v=4",
-//         "username": "jashandeep31",
-//         "accessToken": "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"
-//     },
-//     "expires": "2024-09-04T14:43:08.790Z",
-//     "organization": {
-//         "id": "57db0784-2eba-4c4f-8a83-7c808c09b3c6",
-//         "name": "jashandeep31",
-//         "image": "https://avatars.githubusercontent.com/u/93036882?v=4",
-//         "email": "jashandeep1659@gmail.com",
-//         "balance": 0,
-//         "userId": "clzf98uz70004m3pe7vi94aox",
-//         "allowedDispancers": [],
-//         "publicKey": null,
-//         "createdAt": "2024-08-04T08:03:40.213Z",
-//         "updatedAt": "2024-08-04T08:03:40.213Z"
-//     }
-// }
