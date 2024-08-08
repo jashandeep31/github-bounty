@@ -1,6 +1,5 @@
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import React from "react";
 import IssueCard from "./components/IssueCard";
@@ -11,7 +10,11 @@ async function getRepo(reponame: string) {
       reponame,
     },
     include: {
-      Issue: true,
+      Issue: {
+        orderBy: {
+          createdAt: "desc",
+        },
+      },
     },
   });
 }

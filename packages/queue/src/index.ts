@@ -1,10 +1,8 @@
 import { Queue, Worker } from "bullmq";
 import { db } from "./lib/db.js";
 import {
-  clusterApiUrl,
   Connection,
   Keypair,
-  LAMPORTS_PER_SOL,
   PublicKey,
   sendAndConfirmTransaction,
   SystemProgram,
@@ -38,16 +36,13 @@ export async function putItemInPayoutQueue(id: string) {
 const payoutWorker = new Worker(
   "payout-queue",
   async (job) => {
-    console.log(job.data);
     // if (1 == 1) return;
     const payout = await db.payout.findUnique({
       where: {
         id: job.data.id,
       },
     });
-    console.log(`we are till here`);
     if (!payout || payout.status !== "PRE_PROCESSING") return;
-    console.log(`we are till here now finally`);
 
     const user = await db.user.findUnique({
       where: {
@@ -94,8 +89,6 @@ const payoutWorker = new Worker(
         "https://solana-devnet.g.alchemy.com/v2/ggElObM2tMIgAKq7VyByiJQjMn58Tg0R",
         "confirmed"
       );
-      console.log(keypair.publicKey.toBase58());
-      console.log(user.publicKey);
       const transaction = new Transaction().add(
         SystemProgram.transfer({
           fromPubkey: new PublicKey(
@@ -106,13 +99,11 @@ const payoutWorker = new Worker(
         })
       );
 
-      console.log(`signature`);
       const signature = await sendAndConfirmTransaction(
         connection,
         transaction,
         [keypair]
       );
-      console.log(signature);
       // create payment
       const payment = await db.payment.create({
         data: {
@@ -136,7 +127,7 @@ const payoutWorker = new Worker(
       let walletBalance = walletLast?.amount
         ? walletLast.amount - payout.amount
         : 0;
-      const walletTransaction = await db.walletTransaction.create({
+      await db.walletTransaction.create({
         data: {
           type: "DEBIT",
           userId: user.id,
@@ -145,6 +136,12 @@ const payoutWorker = new Worker(
           signature,
           paymentId: payment.id,
           body: `For org ${organization.name} paid for bounty to user ${user.username}`,
+        },
+      });
+      await db.organization.update({
+        where: { id: organization.id },
+        data: {
+          balance: { decrement: payout.amount },
         },
       });
 
@@ -159,7 +156,6 @@ const payoutWorker = new Worker(
         },
       });
     });
-    console.log(`Done boys this is done`);
     /*
   
     now we have payout here 

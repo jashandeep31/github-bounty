@@ -53,23 +53,23 @@ export const newBounty = async ({
 
   console.log(message);
 
-  // try {
-  //   octokit.request(
-  //     "POST /repos/{owner}/{repo}/issues/{issue_number}/comments",
-  //     {
-  //       owner: payload.repository.owner.login,
-  //       repo: payload.repository.name,
-  //       issue_number: payload.issue.number,
-  //       body: message,
-  //     }
-  //   );
-  //   console.log(`done`);
-  // } catch (error: any) {
-  //   if (error.response) {
-  //     console.error(
-  //       `Error! Status: ${error.response.status}. Message: ${error.response.data.message}`
-  //     );
-  //   }
-  //   console.error(error);
-  // }
+  try {
+    octokit.request(
+      "POST /repos/{owner}/{repo}/issues/{issue_number}/comments",
+      {
+        owner: payload.repository.owner.login,
+        repo: payload.repository.name,
+        issue_number: payload.issue.number,
+        body: message,
+      }
+    );
+    console.log(`done`);
+  } catch (error: any) {
+    if (error.response) {
+      console.error(
+        `Error! Status: ${error.response.status}. Message: ${error.response.data.message}`
+      );
+    }
+    console.error(error);
+  }
 };

@@ -20,6 +20,9 @@ async function getCurrentRepos(id: string) {
     where: {
       organizationId: id,
     },
+    orderBy: {
+      createdAt: "desc",
+    },
   });
 }
 

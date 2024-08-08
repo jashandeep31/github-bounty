@@ -11,7 +11,11 @@ async function getIssue(link: string) {
   return await db.issue.findUnique({
     where: { link },
     include: {
-      Bounty: true,
+      Bounty: {
+        orderBy: {
+          createdAt: "desc",
+        },
+      },
     },
   });
 }

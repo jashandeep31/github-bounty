@@ -66,8 +66,8 @@ const Page = () => {
         </div>
       ) : null}
       {publicKey && session?.user.publicKey ? (
-        <div>
-          <p>
+        <div className="">
+          <p className="break-all">
             Congratulations your wallet if verified with public Key{" "}
             {session.user.publicKey}{" "}
           </p>
