@@ -38,7 +38,7 @@ export const verifyMessageAndUpdatePublicKey = async ({
       bs58.decode(signature),
       new PublicKey(publicKey).toBytes()
     );
-
+    if (!isValid) throw new Error("Not valid signature");
     await db.organization.update({
       where: {
         id: session.organization.id,

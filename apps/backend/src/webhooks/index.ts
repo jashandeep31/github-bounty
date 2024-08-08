@@ -12,6 +12,8 @@ import {
   fetchOrCreateIssue,
   fetchOrCreateRepo,
 } from "./handlers.js";
+import { giveBounty } from "./giveBounty.js";
+import { newBounty } from "./newBounty.js";
 
 const privateKeyPath = path.resolve("./gitsolapp.2024-08-03.private-key.pem");
 const octokitApp = new App({
@@ -83,59 +85,25 @@ async function processEvent({
   payload: any;
   octokit: any;
 }) {
-  const match = body.match(/\/bounty \$(\d+(?:\.\d{1,2})?)/);
-  if (!match) return;
-  const repo = await fetchOrCreateRepo(reponame);
-  const organization = repo.organization;
-  const isAllowedDispenser = checkDispenserPermissions(organization, username);
-  // add message of if not enough balncer in the comment of reply
-
-  const issue = await fetchOrCreateIssue(
-    issueUrl,
-    payload.issue.title,
-    payload.issue.body,
-    repo.id,
-    organization.id
-  );
-
-  const bounty = await db.bounty.create({
-    data: {
-      amount: Number(match[1]),
-      generatedBy: username,
-      issueId: issue.id,
-    },
-  });
-
-  const message = `
-Congratulations! Your bounty has been successfully registered and will be visible on our website.
-To award the bounty, use the command \`/give-bounty $100 @username\`.
-
-${bounty.amount > organization.balance ? "Please note: Your wallet balance is currently less than the bounty amount. Ensure you recharge your wallet before dispensing the bounty." : ""}
-
-Thank you, @${username}.
-`;
-  console.log(message);
-
   try {
-    octokit.request(
-      "POST /repos/{owner}/{repo}/issues/{issue_number}/comments",
-
-      {
-        owner: payload.repository.owner.login,
-        repo: payload.repository.name,
-        issue_number: payload.issue.number,
-        body: message,
-      }
+    const isGiveBounty = body.match(
+      /\/give-bounty \$(\d+(?:\.\d{1,2})?) @([a-zA-Z\d](?:[a-zA-Z\d-]{0,38}[a-zA-Z\d])?)/
     );
-    console.log(`done`);
-  } catch (error: any) {
-    if (error.response) {
-      console.error(
-        `Error! Status: ${error.response.status}. Message: ${error.response.data.message}`
-      );
+    if (isGiveBounty) {
+      await giveBounty({
+        issueUrl,
+        reponame,
+        username,
+        body,
+        payload,
+        octokit,
+      });
+    } else {
+      const match = body.match(/\/bounty \$(\d+(?:\.\d{1,2})?)/);
+      if (!match) return;
+      await newBounty({ issueUrl, reponame, username, body, payload, octokit });
     }
-    console.error(error);
-  }
+  } catch (error) {}
 }
 
 export { webhookMiddleware };

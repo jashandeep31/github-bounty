@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter, Kanit } from "next/font/google";
 import "./globals.css";
+import { SessionProvider } from "next-auth/react";
+import WalletProviderWrapper from "@/providers/wallet-proivder";
 
 // const inter = Inter({ subsets: ["latin"] });
 const kanit = Kanit({
@@ -20,7 +22,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={kanit.className}>{children}</body>
+      <WalletProviderWrapper>
+        <SessionProvider>
+          <body className={kanit.className}>{children}</body>
+        </SessionProvider>
+      </WalletProviderWrapper>
     </html>
   );
 }

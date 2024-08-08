@@ -1,8 +1,13 @@
+"use client";
+import { auth } from "@/lib/auth";
 import { Button } from "@repo/ui/button";
+import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
 import React from "react";
 
-const page = () => {
+const Page = () => {
+  const session = useSession();
+
   return (
     <div className="container min-h-screen flex items-center justify-center">
       <div className="border rounded-md p-3 lg:w-1/3">
@@ -12,7 +17,13 @@ const page = () => {
           Please select your github account to continue.
         </p>
         <div className="my-6">
-          <Button variant={"outline"} className="w-full">
+          <Button
+            variant={"outline"}
+            className="w-full"
+            onClick={() => {
+              signIn("github");
+            }}
+          >
             Github
           </Button>
         </div>
@@ -35,4 +46,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

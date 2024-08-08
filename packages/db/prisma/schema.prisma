@@ -148,8 +148,8 @@ model Bounty {
 // only the payout from the maintainer to the users or the contributers
 model Payout {
   id             String       @id @default(uuid())
-  organizationId String
   from           Organization @relation(fields: [organizationId], references: [id])
+  organizationId String
   generatedTo    String // username in string format of who is winner
   generatedBy    String // username of who created or commented so easily identified if someone make fake
   link           String // link to that comment that enabled the payout
@@ -159,8 +159,8 @@ model Payout {
   updatedAt      DateTime     @updatedAt
   issue          Issue        @relation(fields: [issueId], references: [id])
   issueId        String
-  paymentId      String       @unique // to take the ref  of the payment
-  payment        Payment      @relation(fields: [paymentId], references: [id])
+  paymentId      String?      @unique // to take the ref  of the payment
+  payment        Payment?     @relation(fields: [paymentId], references: [id])
 }
 
 enum PayoutEnum {
@@ -210,7 +210,9 @@ model Payment {
 model WalletTransaction {
   id                String                @id @default(uuid())
   type              WalletTransactionEnum
+  // only include if getting from org not while paying for the org
   organization      Organization?         @relation(fields: [organizationId], references: [id])
+  // only include the user when paying to user not getting paid from user
   user              User?                 @relation(fields: [userId], references: [id])
   amount            Float
   totalWalletAmount Float

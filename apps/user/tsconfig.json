@@ -6,7 +6,10 @@
         "name": "next"
       }
     ],
+    //! modle resolution is udpatded to solve error of auth.ts
 
+    "declaration": false,
+    "declarationMap": false,
     "strictNullChecks": true,
     "paths": {
       "@/*": ["./*"]
