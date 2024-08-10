@@ -32,9 +32,9 @@ const WalletActions = ({
   const { publicKey } = useWallet();
   const newSession = verifyUserBasicAuthAndProperOrganization(session);
   useEffect(() => {
-    if (newSession) {
+    if (newSession && publicKey) {
       setcurrentState("transfer_funds");
-    } else if (publicKey) {
+    } else if (publicKey && publicKey) {
       setcurrentState("need_to_sign_message");
     } else if (!publicKey) {
       setcurrentState("need_wallet_connection");
@@ -64,7 +64,10 @@ const WalletActions = ({
 
       {currentState === "need_to_sign_message" ? <SignMessge /> : null}
       {currentState === "transfer_funds" && newSession ? (
-        <AddFunds session={newSession} />
+        <AddFunds
+          session={newSession}
+          setWalletActionState={setWalletActionState}
+        />
       ) : null}
     </div>
   );

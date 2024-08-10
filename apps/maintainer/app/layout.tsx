@@ -4,6 +4,7 @@ import "./globals.css";
 import { SessionProvider } from "next-auth/react";
 import WalletProviderComponent from "./providers/walletProvider";
 import { Toaster } from "sonner";
+import { WalletContextProvider } from "@/providers/walletContextProvider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -21,7 +22,9 @@ export default function RootLayout({
       <WalletProviderComponent>
         <SessionProvider>
           <Toaster />
-          <body className={inter.className}>{children}</body>
+          <WalletContextProvider>
+            <body className={inter.className}>{children}</body>
+          </WalletContextProvider>
         </SessionProvider>
       </WalletProviderComponent>
     </html>

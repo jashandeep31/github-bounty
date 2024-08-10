@@ -1,10 +1,20 @@
 "use client";
 import { Button } from "@repo/ui/button";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
-import React from "react";
+import { useRouter } from "next/navigation";
+import React, { useEffect } from "react";
 
-const page = () => {
+const Page = () => {
+  const session = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (session.status === "authenticated") {
+      router.push("/");
+    }
+  }, [session, router]);
+
   return (
     <div className="container min-h-screen flex items-center justify-center">
       <div className="border rounded-md p-3 lg:w-1/3">
@@ -41,4 +51,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

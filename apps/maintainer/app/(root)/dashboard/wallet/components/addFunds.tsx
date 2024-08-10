@@ -14,11 +14,14 @@ import {
 import { toast } from "sonner";
 import { verifyPaymentAndUpdateOrganizationWallet } from "../_actions";
 import { convertDollarToSOL, convertToValidLamports } from "@/lib/sol3";
+import { useRouter } from "next/navigation";
 
 const AddFunds = ({
   session,
+  setWalletActionState,
 }: {
   session: IVerifyUserBasicAuthAndProperOrganization;
+  setWalletActionState: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const { connection } = useConnection();
   const [amount, setAmount] = useState<number>(5);
@@ -65,10 +68,11 @@ const AddFunds = ({
         signature,
       });
       toast.success("Payment successfull", { id: toastId });
+      setWalletActionState(false);
     } catch (error: any) {
       toast.error(error.message || "Something went wrong", { id: toastId });
     }
-  }, [amount, publicKey, connection, sendTransaction]);
+  }, [amount, publicKey, connection, sendTransaction, setWalletActionState]);
   return (
     <div className="flex flex-col items-center">
       <h1 className="lg:text-3xl font-bold">Add Funds</h1>

@@ -14,12 +14,14 @@ import {
   TableHeader,
   TableRow,
 } from "@repo/ui/table";
+import { useWalletProvider } from "@/providers/walletContextProvider";
 
 const Page = () => {
   const session = useSession();
   const [walletActionState, setWalletActionState] = useState<boolean>(false);
   const [pastPayments, setPastPayments] = useState<Payment[]>([]);
 
+  const wallet = useWalletProvider();
   const getPayments = useCallback(async () => {
     setPastPayments(await getOrganizationPayments());
   }, []);
@@ -51,7 +53,8 @@ const Page = () => {
       <div className="">
         <div className="border-foreground p-3 rounded-md border inline-block">
           <h2 className="md:text-4xl text-lg font-bold">
-            USDT {session.data.organization.balance}{" "}
+            USDT {wallet.state === "loading" ? ".." : null}
+            {wallet.state === "connected" ? wallet.amount : null}
           </h2>
         </div>
         <div className="mt-6">

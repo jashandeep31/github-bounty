@@ -48,6 +48,11 @@ export const newBounty = async ({
   
   ${bounty.amount > organization.balance ? "⚠️ Please note: Your wallet balance is currently less than the bounty amount. Ensure you recharge your wallet before dispensing the bounty." : ""}
   
+  Copy command to give bouny
+  \`\`\`
+  /give-bounty $${bounty.amount} @
+  \`\`\`
+
   🙏 Thank you, @${username}.
   `;
 

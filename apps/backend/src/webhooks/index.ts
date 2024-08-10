@@ -43,10 +43,52 @@ export const ACCESS_TOKEN = (): string =>
 // 1. create a new task contain /bounty $5
 // 2. somebody create a pull request in which comment /give-bounty $5 @username
 // 3. catch every comment on the issue or the pull request
+octokitApp.webhooks.on("installation_repositories.added", async (context) => {
+  try {
+    const username = context.payload.sender.login;
+    const reponame = context.payload.repositories_added[0]?.name;
+    if (!reponame || !username) return;
 
-octokitApp.webhooks.on("pull_request.reopened", () => console.log(`first`));
-octokitApp.webhooks.on("issues.opened", () => {
-  console.log(`isssue is opened`);
+    const isRepo = await db.repo.findUnique({
+      where: {
+        reponame: username + "/" + reponame,
+      },
+    });
+    if (isRepo) return;
+    const organization = await db.organization.findUnique({
+      where: {
+        name: username,
+      },
+    });
+    if (!organization) return;
+    await db.repo.create({
+      data: {
+        reponame: username + "/" + reponame,
+        link: `https://github.com/${username}/${reponame}`,
+        organizationId: organization.id,
+        totalIssues: 0,
+      },
+    });
+  } catch (e) {}
+});
+
+// octokitApp.webhooks.on("pull_request.reopened", () => console.log(`first`));
+// octokitApp.webhooks.on("pull_request.reopened", () => console.log(`first`));
+octokitApp.webhooks.on("issues.opened", (context) => {
+  const reponame = context.payload.repository.full_name;
+  const username = context.payload.issue.user?.login;
+  const issueUrl = context.payload.issue.html_url;
+  const body = context.payload.issue.body || "";
+  if (!username || username === `gitsolapp[bot]`) return;
+
+  processEvent({
+    reponame,
+    username,
+    body,
+    issueUrl,
+    payload: context.payload,
+    octokit: context.octokit,
+  });
 });
 octokitApp.webhooks.on("pull_request_review.submitted", (context) => {
   // console.log(context.payload.);

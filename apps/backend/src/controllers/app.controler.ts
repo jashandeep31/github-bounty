@@ -23,11 +23,13 @@ export const checkStatus = async (req: Request, res: Response) => {
           reponame: params.user + "/" + params.repo,
         },
       });
+      throw new Error("");
       if (!isRepo) {
         await db.repo.create({
           data: {
             reponame: params.user + "/" + params.repo,
             link: `https://github.com/${params.user}/${params.repo}`,
+            // TODO: Changing id is required brother
             organizationId: "57db0784-2eba-4c4f-8a83-7c808c09b3c6",
             totalIssues: 0,
           },

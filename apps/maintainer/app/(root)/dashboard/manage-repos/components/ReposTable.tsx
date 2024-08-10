@@ -12,7 +12,7 @@ import TableRowComponent from "./TableRow";
 import { IGithubRepo } from "../types";
 import { Repo } from "@repo/db";
 import axios from "axios";
-import { Session, User } from "next-auth";
+import { Session } from "next-auth";
 
 const ReposTable = ({
   userRepos,
@@ -30,7 +30,7 @@ const ReposTable = ({
           Authorization: `Bearer ${session.user.accessToken}`,
         },
       });
-      setRepos(res.data);
+      setRepos(res.data.reverse());
     } catch (error) {}
   }, [session.user.accessToken]);
 

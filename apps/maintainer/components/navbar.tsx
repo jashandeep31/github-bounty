@@ -5,6 +5,8 @@ import Link from "next/link";
 
 const navbarDesktopLinks: { name: string; link: string }[] = [
   { name: "Home", link: "/" },
+  { name: "Payouts", link: "/dashboard/payouts" },
+  { name: "Wallet", link: "/dashboard/wallet" },
   { name: "About Us", link: "/about" },
 ];
 

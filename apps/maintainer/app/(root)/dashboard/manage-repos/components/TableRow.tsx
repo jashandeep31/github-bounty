@@ -2,13 +2,14 @@
 import React, { useState } from "react";
 import { TableCell, TableRow } from "@repo/ui/table";
 import Link from "next/link";
-import { Button } from "@repo/ui/button";
+import { Button, buttonVariants } from "@repo/ui/button";
 import { RotateCw } from "lucide-react";
 import { IGithubRepo } from "../types";
 import axios from "axios";
 import { Session } from "next-auth";
 import { revalidatePath } from "next/cache";
 import { useRouter } from "next/navigation";
+import { cn } from "@repo/ui/utils";
 
 const TableRowComponent = ({
   repo,
@@ -69,9 +70,12 @@ const TableRowComponent = ({
           <div className="flex justify-end gap-2 items-center"></div>
         ) : (
           <div className="flex items-center gap-2 justify-end">
-            <Button variant={"outline"} size={"sm"}>
+            <Link
+              href={"https://github.com/apps/gitsolapp/installations/new"}
+              className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
+            >
               Install
-            </Button>
+            </Link>
             <button
               disabled={refreshButtonState === "loading"}
               onClick={() => refreshStatus(repo.full_name)}
