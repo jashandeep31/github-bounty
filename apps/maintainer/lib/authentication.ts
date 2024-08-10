@@ -36,6 +36,10 @@ const combinedBasicSchema = z.object({
   organization: organizationBasicValidation.shape.organization,
 });
 
+export type IVerifyUserBasicAuthAndBasicOrganizationValidation = z.infer<
+  typeof combinedBasicSchema
+>;
+
 export function verifyUserBasicAuthAndBasicOrganizationValidation(
   session: Session
 ): null | z.infer<typeof combinedBasicSchema> {

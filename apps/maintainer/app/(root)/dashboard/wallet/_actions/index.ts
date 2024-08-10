@@ -143,7 +143,9 @@ export async function verifyPaymentAndUpdateOrganizationWallet({
   }
 }
 
-export async function getOrganizationPayments(): Promise<Payment[]> {
+export async function getOrganizationPayments(
+  pageNo: number
+): Promise<Payment[]> {
   const _session = await auth();
   if (!_session) return [];
   const session = verifyUserBasicAuthAndBasicOrganizationValidation(_session);
@@ -156,6 +158,8 @@ export async function getOrganizationPayments(): Promise<Payment[]> {
     orderBy: {
       createdAt: "desc",
     },
+    skip: (pageNo - 1) * 10,
+    take: 11,
   });
 }
 

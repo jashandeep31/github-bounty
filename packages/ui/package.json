@@ -46,6 +46,7 @@
     "./table": "./src/components/ui/table.tsx",
     "./input": "./src/components/ui/input.tsx",
     "./dropdown": "./src/components/ui/dropdown-menu.tsx",
+    "./pagination": "./src/components/ui/pagination.tsx",
     "./badge": "./src/components/ui/badge.tsx"
   }
 }

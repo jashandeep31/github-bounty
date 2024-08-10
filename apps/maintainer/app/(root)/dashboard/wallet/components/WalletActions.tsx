@@ -40,7 +40,7 @@ const WalletActions = ({
   if (!walletActionState) return null;
 
   return (
-    <div className="bg-white border absolute top-0 left-0 w-screen z-10 min-h-screen flex flex-col justify-center">
+    <div className="bg-background border absolute top-0 left-0 w-screen z-10 min-h-screen flex flex-col justify-center">
       <button
         className="fixed top-5 left-5 z-10 border rounded-full p-3 hover:border-black duration-300 hover:rotate-180  "
         onClick={() => setWalletActionState(false)}

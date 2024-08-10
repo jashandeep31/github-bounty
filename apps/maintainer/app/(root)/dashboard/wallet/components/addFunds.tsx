@@ -4,19 +4,11 @@ import { Input } from "@repo/ui/input";
 import { Button } from "@repo/ui/button";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 
-import {
-  LAMPORTS_PER_SOL,
-  PublicKey,
-  SystemProgram,
-  Transaction,
-} from "@solana/web3.js";
+import { PublicKey, Transaction } from "@solana/web3.js";
 
 import { toast } from "sonner";
 import { verifyPaymentAndUpdateOrganizationWallet } from "../_actions";
-import { convertDollarToSOL, convertToValidLamports } from "@/lib/sol3";
-import { useRouter } from "next/navigation";
 import {
-  getOrCreateAssociatedTokenAccount,
   createTransferInstruction,
   TOKEN_PROGRAM_ID,
   ASSOCIATED_TOKEN_PROGRAM_ID,
@@ -33,6 +25,7 @@ const AddFunds = ({
   const { connection } = useConnection();
   const [amount, setAmount] = useState<number>(5);
   const { publicKey, sendTransaction } = useWallet();
+
   const generateTransaction = useCallback(async () => {
     const toastId = toast.loading("Proccessing payment");
 
@@ -94,7 +87,6 @@ const AddFunds = ({
         minContextSlot,
       });
 
-      // !! I donot about this behind the scenes i am using the signature for the validation
       const confirmation = await connection.confirmTransaction({
         blockhash,
         lastValidBlockHeight,
@@ -107,6 +99,8 @@ const AddFunds = ({
       });
       toast.success("Payment successfull", { id: toastId });
       setWalletActionState(false);
+      // ! Temp solution to effect the updated balance
+      window.location.reload();
     } catch (error: any) {
       toast.error(error.message || "Something went wrong", { id: toastId });
     }

@@ -15,16 +15,30 @@ import {
   TableRow,
 } from "@repo/ui/table";
 import { useWalletProvider } from "@/providers/walletContextProvider";
+import { useSearchParams } from "next/navigation";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@repo/ui/pagination";
+import { cn } from "@repo/ui/utils";
 
 const Page = () => {
+  const searchParams = useSearchParams();
+  const pageNo = isNaN(parseInt(searchParams.get("page") ?? "1"))
+    ? 1
+    : parseInt(searchParams.get("page") ?? "1");
   const session = useSession();
   const [walletActionState, setWalletActionState] = useState<boolean>(false);
   const [pastPayments, setPastPayments] = useState<Payment[]>([]);
 
   const wallet = useWalletProvider();
   const getPayments = useCallback(async () => {
-    setPastPayments(await getOrganizationPayments());
-  }, []);
+    setPastPayments(await getOrganizationPayments(pageNo));
+  }, [pageNo]);
 
   useEffect(() => {
     getPayments();
@@ -53,7 +67,7 @@ const Page = () => {
         />
       ) : null}
       <div className="">
-        <div className="border-foreground p-3 rounded-md border inline-block">
+        <div className="border-muted p-3 rounded-md border inline-block">
           <h2 className="md:text-4xl text-lg font-bold">
             USDT {wallet.state === "loading" ? ".." : null}
             {wallet.state === "connected" ? wallet.amount : null}
@@ -90,6 +104,40 @@ const Page = () => {
             ))}
           </TableBody>
         </Table>
+        <Pagination className="mt-6">
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious
+                href={
+                  pageNo <= 1
+                    ? `/dashboard/wallet?page=1`
+                    : `/dashboard/wallet?page=${pageNo - 1}`
+                }
+                shallow
+                className={cn(pageNo <= 1 && "text-muted opacity-50")}
+              />
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink href="#" isActive>
+                {" "}
+                {pageNo}
+              </PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationNext
+                className={cn(
+                  pastPayments.length <= 10 && "text-muted opacity-50"
+                )}
+                shallow
+                href={
+                  pastPayments.length > 10
+                    ? `/dashboard/wallet?page=${pageNo + 1}`
+                    : `/dashboard/wallet?page=${pageNo}`
+                }
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
       </div>
     </div>
   );
