@@ -4,7 +4,11 @@ import { auth } from "@/lib/auth";
 import nacl from "tweetnacl";
 import bs58 from "bs58";
 import { decodeUTF8 } from "tweetnacl-util";
-import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
+import {
+  LAMPORTS_PER_SOL,
+  PublicKey,
+  VersionedTransactionResponse,
+} from "@solana/web3.js";
 import { db } from "@/lib/db";
 import {
   verifyUserBasicAuthAndBasicOrganizationValidation,
@@ -68,23 +72,16 @@ export async function verifyPaymentAndUpdateOrganizationWallet({
     const transaction = await sol3Connection.getTransaction(signature, {
       maxSupportedTransactionVersion: 1,
     });
-
+    const { transferredAmount, receivedAmount } =
+      calculateTransferredAmount(transaction);
+    // if (1 == 1) return;
     if (!transaction) {
       throw new Error(
         "Failed to validate the signature, submit signature throught form"
       );
     }
     await db.$transaction(async (tx) => {
-      const paymentAmount =
-        Math.floor(
-          convertSOLTODollar(
-            convertLamportsToSOL(
-              (transaction?.meta?.postBalances[1] ?? 0) -
-                (transaction?.meta?.preBalances[1] ?? 0)
-            )
-          ) * 100
-        ) / 100;
-
+      const paymentAmount = receivedAmount / 1000_000;
       if (paymentAmount <= 0 || !paymentAmount)
         throw new Error(`Payment amount is not valid`);
 
@@ -161,3 +158,65 @@ export async function getOrganizationPayments(): Promise<Payment[]> {
     },
   });
 }
+
+const calculateTransferredAmount = (
+  transaction: VersionedTransactionResponse | null
+) => {
+  if (!transaction) throw new Error("Transaction is not ok");
+  if (!transaction.meta) throw new Error("Transaction is not ok");
+  const preTokenBalances = transaction.meta.preTokenBalances;
+  const postTokenBalances = transaction.meta.postTokenBalances;
+
+  // Assuming the token transfer involves two accounts
+  if (preTokenBalances?.length !== postTokenBalances?.length) {
+    throw new Error("Mismatch in token account balances length");
+  }
+
+  // Find the relevant accounts
+  // this is more
+  const senderBalanceBefore = preTokenBalances?.find(
+    (balance) =>
+      balance.accountIndex === 2 &&
+      balance.mint === "Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr"
+  )?.uiTokenAmount.amount;
+  // this is less
+  const senderBalanceAfter = postTokenBalances?.find(
+    (balance) =>
+      balance.accountIndex === 2 &&
+      balance.mint === "Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr"
+  )?.uiTokenAmount.amount;
+
+  // this is less
+  const receiverBalanceBefore = preTokenBalances?.find(
+    (balance) =>
+      balance.accountIndex === 1 &&
+      balance.mint === "Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr"
+  )?.uiTokenAmount.amount;
+  // this is more
+  const receiverBalanceAfter = postTokenBalances?.find(
+    (balance) =>
+      balance.accountIndex === 1 &&
+      balance.mint === "Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr"
+  )?.uiTokenAmount.amount;
+
+  if (
+    senderBalanceBefore === undefined ||
+    senderBalanceAfter === undefined ||
+    receiverBalanceBefore === undefined ||
+    receiverBalanceAfter === undefined
+  ) {
+    throw new Error("Could not find token balances for sender or receiver");
+  }
+
+  // Convert string balances to numbers for calculation
+  const senderBalanceBeforeNum = parseFloat(senderBalanceBefore);
+  const senderBalanceAfterNum = parseFloat(senderBalanceAfter);
+  const receiverBalanceBeforeNum = parseFloat(receiverBalanceBefore);
+  const receiverBalanceAfterNum = parseFloat(receiverBalanceAfter);
+
+  // Calculate the transferred amount
+  const transferredAmount = senderBalanceBeforeNum - senderBalanceAfterNum;
+  const receivedAmount = receiverBalanceAfterNum - receiverBalanceBeforeNum;
+
+  return { transferredAmount, receivedAmount };
+};

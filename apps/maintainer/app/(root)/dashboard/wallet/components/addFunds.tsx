@@ -15,6 +15,13 @@ import { toast } from "sonner";
 import { verifyPaymentAndUpdateOrganizationWallet } from "../_actions";
 import { convertDollarToSOL, convertToValidLamports } from "@/lib/sol3";
 import { useRouter } from "next/navigation";
+import {
+  getOrCreateAssociatedTokenAccount,
+  createTransferInstruction,
+  TOKEN_PROGRAM_ID,
+  ASSOCIATED_TOKEN_PROGRAM_ID,
+  getAssociatedTokenAddress,
+} from "@solana/spl-token";
 
 const AddFunds = ({
   session,
@@ -43,15 +50,46 @@ const AddFunds = ({
         value: { blockhash, lastValidBlockHeight },
       } = await connection.getLatestBlockhashAndContext();
 
-      const transaction = new Transaction().add(
-        SystemProgram.transfer({
-          fromPubkey: publicKey,
-          toPubkey: new PublicKey(
-            "2JVQ3WNE2bwoLYsnyRMQydvkpfPepRedK5h9z5Zy4MEi"
-          ),
-          lamports: convertToValidLamports(convertDollarToSOL(amount)),
-        })
+      const MINT_ADDRESS = new PublicKey(
+        "Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr"
       );
+      async function getNumberDecimals(
+        mintAddress: PublicKey
+      ): Promise<number> {
+        const info = await connection.getParsedAccountInfo(mintAddress);
+        const result = (info.value?.data as any).parsed.info.decimals as number;
+        console.log(result);
+        return result;
+      }
+      await getNumberDecimals(MINT_ADDRESS);
+      const toPublicKey = new PublicKey(
+        "BKxwFEDpVqLMwhkgdLXhi6EpUdpYhxj3ao9GMCyv4Ryh"
+      );
+      const fromTokenAccountAddress = await getAssociatedTokenAddress(
+        MINT_ADDRESS,
+        publicKey,
+        false,
+        TOKEN_PROGRAM_ID,
+        ASSOCIATED_TOKEN_PROGRAM_ID
+      );
+      const toTokenAccountAddress = await getAssociatedTokenAddress(
+        MINT_ADDRESS,
+        toPublicKey,
+        false,
+        TOKEN_PROGRAM_ID,
+        ASSOCIATED_TOKEN_PROGRAM_ID
+      );
+      const transaction = new Transaction().add(
+        createTransferInstruction(
+          fromTokenAccountAddress,
+          toTokenAccountAddress,
+          publicKey,
+          1000_000 * amount,
+          [],
+          TOKEN_PROGRAM_ID
+        )
+      );
+
       const signature = await sendTransaction(transaction, connection, {
         minContextSlot,
       });

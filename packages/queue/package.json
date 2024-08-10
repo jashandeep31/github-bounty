@@ -16,6 +16,8 @@
   "description": "",
   "dependencies": {
     "@repo/db": "*",
+    "@solana/spl-token": "^0.4.8",
+    "@solana/web3.js": "^1.95.2",
     "bullmq": "^5.12.1",
     "dotenv": "^16.4.5"
   }

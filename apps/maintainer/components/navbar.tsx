@@ -19,7 +19,7 @@ export default async function Navbar() {
           <h1 className="text-lg font-bold flex flex-col ">
             GitSol <span className="text-xs font-light">Maintainers</span>{" "}
           </h1>
-          <div className="flex gap-4 items-center">
+          <div className="hidden md:flex gap-4 items-center">
             {navbarDesktopLinks.map((link, index) => (
               <nav
                 key={index}

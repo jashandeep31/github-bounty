@@ -43,6 +43,7 @@ export const giveBounty = async ({
   const organization = repo.organization;
   const isAllowedDispenser = checkDispenserPermissions(organization, username);
 
+  console.log(`this is working`);
   if (!isAllowedDispenser) return;
 
   const issue = await fetchOrCreateIssue(

@@ -1,16 +1,11 @@
 "use client";
-import { Button } from "@repo/ui/button";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { Session } from "next-auth";
 import React, { useEffect, useState } from "react";
 import SignMessge from "./signMessage";
-import { Input } from "@repo/ui/input";
-import {
-  verifyUserBasicAuth,
-  verifyUserBasicAuthAndBasicOrganizationValidation,
-  verifyUserBasicAuthAndProperOrganization,
-} from "@/lib/authentication";
+import { useLockBodyScroll } from "@uidotdev/usehooks";
+import { verifyUserBasicAuthAndProperOrganization } from "@/lib/authentication";
 import AddFunds from "./addFunds";
 import { X } from "lucide-react";
 
@@ -40,12 +35,14 @@ const WalletActions = ({
       setcurrentState("need_wallet_connection");
     }
   }, [publicKey, newSession]);
+
+  useLockBodyScroll();
   if (!walletActionState) return null;
 
   return (
-    <div className="bg-white absolute top-0 left-0 h-screen w-screen z-10 min-h-screen flex flex-col justify-center">
+    <div className="bg-white border absolute top-0 left-0 w-screen z-10 min-h-screen flex flex-col justify-center">
       <button
-        className="fixed top-5 left-5 z-10 border rounded-full p-3 hover:border-black duration-300 hover:rotate-180 "
+        className="fixed top-5 left-5 z-10 border rounded-full p-3 hover:border-black duration-300 hover:rotate-180  "
         onClick={() => setWalletActionState(false)}
       >
         <X size={20} />

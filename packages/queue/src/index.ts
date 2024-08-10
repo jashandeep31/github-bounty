@@ -3,6 +3,7 @@ import { db } from "./lib/db.js";
 import {
   Connection,
   Keypair,
+  ParsedAccountData,
   PublicKey,
   sendAndConfirmTransaction,
   SystemProgram,
@@ -11,6 +12,12 @@ import {
 import dotenv from "dotenv";
 import { convertDollarToSOL, convertToValidLamports } from "./lib/sol3.js";
 import bs58 from "bs58";
+
+import {
+  getOrCreateAssociatedTokenAccount,
+  createTransferInstruction,
+} from "@solana/spl-token";
+
 dotenv.config();
 
 const payoutQueue = new Queue("payout-queue", {
@@ -26,10 +33,10 @@ export async function putItemInPayoutQueue(id: string) {
     "payment out",
     {
       id,
-    },
+    }
     // TODO: remove this after moving the producton
     // { delay: 30 * 60 * 100 }
-    { delay: 10 * 100 }
+    // { delay: 10 * 100 }
   );
 }
 
@@ -89,14 +96,53 @@ const payoutWorker = new Worker(
         "https://solana-devnet.g.alchemy.com/v2/ggElObM2tMIgAKq7VyByiJQjMn58Tg0R",
         "confirmed"
       );
+      const MINT_ADDRESS = new PublicKey(
+        "Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr"
+      );
+      let sourceAccount = await getOrCreateAssociatedTokenAccount(
+        connection,
+        keypair,
+        new PublicKey(MINT_ADDRESS),
+        keypair.publicKey
+      );
+      let destinationAccount = await getOrCreateAssociatedTokenAccount(
+        connection,
+        keypair,
+        new PublicKey(MINT_ADDRESS),
+        new PublicKey(user.publicKey)
+      );
+
+      async function getNumberDecimals(mintAddress: string): Promise<number> {
+        const info = await connection.getParsedAccountInfo(
+          new PublicKey(MINT_ADDRESS)
+        );
+        const result = (info.value?.data as ParsedAccountData).parsed.info
+          .decimals as number;
+        return result;
+      }
+
+      // const transaction = new Transaction().add(
+      //   SystemProgram.transfer({
+      //     fromPubkey: new PublicKey(
+      //       "Byr7jq8udNbXjcKdh1U6ULydEdst6Xa5ucQMJyRVpxS7"
+      //     ),
+      //     toPubkey: new PublicKey(user.publicKey),
+      //     lamports: convertToValidLamports(convertDollarToSOL(payout.amount)),
+      //   })
+      // );
+
+      // const signature = await sendAndConfirmTransaction(
+      //   connection,
+      //   transaction,
+      //   [keypair]
+      // );
       const transaction = new Transaction().add(
-        SystemProgram.transfer({
-          fromPubkey: new PublicKey(
-            "Byr7jq8udNbXjcKdh1U6ULydEdst6Xa5ucQMJyRVpxS7"
-          ),
-          toPubkey: new PublicKey(user.publicKey),
-          lamports: convertToValidLamports(convertDollarToSOL(payout.amount)),
-        })
+        createTransferInstruction(
+          sourceAccount.address,
+          destinationAccount.address,
+          keypair.publicKey,
+          payout.amount * 1000_000
+        )
       );
 
       const signature = await sendAndConfirmTransaction(
@@ -104,6 +150,7 @@ const payoutWorker = new Worker(
         transaction,
         [keypair]
       );
+      console.log(signature);
       // create payment
       const payment = await db.payment.create({
         data: {

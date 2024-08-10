@@ -45,11 +45,13 @@ const Page = () => {
     );
   return (
     <div className="container md:mt-12 mt-6">
-      <WalletActions
-        session={session.data}
-        setWalletActionState={setWalletActionState}
-        walletActionState={walletActionState}
-      />
+      {walletActionState ? (
+        <WalletActions
+          session={session.data}
+          setWalletActionState={setWalletActionState}
+          walletActionState={walletActionState}
+        />
+      ) : null}
       <div className="">
         <div className="border-foreground p-3 rounded-md border inline-block">
           <h2 className="md:text-4xl text-lg font-bold">
