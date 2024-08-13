@@ -8,7 +8,7 @@ const layout = ({ children }: { children: React.ReactNode }) => {
         <Navbar />
       </header>
       <main className="grid flex-1">{children}</main>
-      <footer className=" py-4 border-t">
+      <footer className=" py-4 border-t mt-12">
         <div className="container">
           <p>@Jashandeep31</p>
         </div>

@@ -55,9 +55,9 @@ export default function Navbar() {
     <div className="py-3">
       <div className="container flex items-center justify-between">
         <div className="flex items-center gap-6 ">
-          <h1 className="text-lg font-bold flex flex-col ">
-            GitSol <span className="text-xs font-light">Maintainers</span>{" "}
-          </h1>
+          <Link href={"/"} className="text-lg font-bold flex flex-col ">
+            GitSol <span className="text-xs font-light">Maintainers</span>
+          </Link>
           <div className="hidden md:flex gap-4 items-center">
             {navbarDesktopLinks.map((link, index) => (
               <nav

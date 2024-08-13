@@ -23,7 +23,6 @@ export const checkStatus = async (req: Request, res: Response) => {
           reponame: params.user + "/" + params.repo,
         },
       });
-      throw new Error("");
       if (!isRepo) {
         await db.repo.create({
           data: {

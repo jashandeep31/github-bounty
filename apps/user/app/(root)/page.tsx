@@ -1,9 +1,15 @@
+import { auth } from "@/lib/auth";
 import { buttonVariants } from "@repo/ui/button";
 import { cn } from "@repo/ui/utils";
+import { redirect } from "next/navigation";
 import Link from "next/link";
 import React from "react";
 
-export default function page() {
+export default async function page() {
+  const session = await auth();
+  if (session?.user) {
+    redirect("/dashboard");
+  }
   return (
     <div>
       <section className="space-y-6 pb-8 pt-6 md:pb-12 md:pt-10 lg:py-32">

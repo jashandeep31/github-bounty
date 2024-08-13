@@ -35,11 +35,12 @@ export async function fetchOrCreateRepo(reponame: string) {
   return isRepo;
 }
 
-export async function checkDispenserPermissions(
+export function checkDispenserPermissions(
   organization: Organization,
   username: string
 ) {
   if (organization.allowedDispancers.includes(username)) return true;
+  return null;
 }
 
 export async function fetchOrCreateIssue(

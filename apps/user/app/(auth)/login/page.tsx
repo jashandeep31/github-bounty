@@ -3,10 +3,17 @@ import { auth } from "@/lib/auth";
 import { Button } from "@repo/ui/button";
 import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 const Page = () => {
   const session = useSession();
+  const router = useRouter();
+  useEffect(() => {
+    if (session.status === "authenticated") {
+      router.push("/");
+    }
+  }, [session.status, router]);
 
   return (
     <div className="container min-h-screen flex items-center justify-center">

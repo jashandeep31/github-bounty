@@ -26,6 +26,7 @@ export const newBounty = async ({
   const repo = await fetchOrCreateRepo(reponame);
   const organization = repo.organization;
   const isAllowedDispenser = checkDispenserPermissions(organization, username);
+  console.log(username, organization.allowedDispancers);
   if (!isAllowedDispenser) return;
   const issue = await fetchOrCreateIssue(
     issueUrl,
