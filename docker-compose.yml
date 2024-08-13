@@ -1,0 +1,9 @@
+version: '3'
+
+services: 
+  backend: 
+    image: backend:latest
+    build: 
+      context: ./apps/backend  # Specifies the build context for the Dockerfile
+    ports: 
+      - "8000:8000"  # Maps port 8000 on the host to port 8000 on the container
