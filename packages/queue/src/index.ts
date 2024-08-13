@@ -1,5 +1,6 @@
 import { Queue, Worker } from "bullmq";
 import { db } from "./lib/db.js";
+import dotenv from "dotenv";
 import {
   Connection,
   Keypair,
@@ -9,8 +10,6 @@ import {
   SystemProgram,
   Transaction,
 } from "@solana/web3.js";
-import dotenv from "dotenv";
-import { convertDollarToSOL, convertToValidLamports } from "./lib/sol3.js";
 import bs58 from "bs58";
 
 import {
@@ -22,8 +21,10 @@ dotenv.config();
 
 const payoutQueue = new Queue("payout-queue", {
   connection: {
-    host: "127.0.0.1",
+    host: process.env.URI,
     port: 6379,
+    username: "default",
+    password: process.env.PASSWORD,
   },
 });
 
@@ -217,8 +218,10 @@ const payoutWorker = new Worker(
   },
   {
     connection: {
-      host: "127.0.0.1",
+      host: process.env.URI,
       port: 6379,
+      username: "default",
+      // password: process.env.PASSWORD,
     },
   }
 );

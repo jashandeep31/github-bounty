@@ -15,7 +15,7 @@ import {
 import { giveBounty } from "./giveBounty.js";
 import { newBounty } from "./newBounty.js";
 
-const privateKeyPath = path.resolve("./gitsolapp.2024-08-03.private-key.pem");
+const privateKeyPath = path.resolve(process.env.PRIVATE_KEY_PATH ?? "");
 const octokitApp = new App({
   appId: process.env.APP_ID ?? "",
   privateKey: fs.readFileSync(privateKeyPath, "utf8"),
