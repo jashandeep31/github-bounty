@@ -1,9 +1,18 @@
 {
   "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": ["**/.env"],
   "ui": "tui",
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
+      "env": [
+        "BACKEND_URL",
+        "USER_URL",
+        "APP_ID",
+        "MAINTAINER_URL",
+        "WALLET_PUBLIC_KEY",
+        "MINT_PUBLIC_KEY"
+      ],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": [".next/**", "!.next/cache/**"]
     },
@@ -19,6 +28,7 @@
     },
     "db:push": {
       "cache": false
-    }
+    },
+    "env": {}
   }
 }
