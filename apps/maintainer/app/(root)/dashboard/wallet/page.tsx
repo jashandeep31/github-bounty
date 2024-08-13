@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@repo/ui/button";
 import { useSession } from "next-auth/react";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { Suspense, useCallback, useEffect, useState } from "react";
 import WalletActions from "./components/WalletActions";
 import { Payment } from "@repo/db";
 import { getOrganizationPayments } from "./_actions";
@@ -26,8 +26,9 @@ import {
 } from "@repo/ui/pagination";
 import { cn } from "@repo/ui/utils";
 
-const Page = () => {
+const PageComponent = () => {
   const searchParams = useSearchParams();
+
   const pageNo = isNaN(parseInt(searchParams.get("page") ?? "1"))
     ? 1
     : parseInt(searchParams.get("page") ?? "1");
@@ -140,6 +141,14 @@ const Page = () => {
         </Pagination>
       </div>
     </div>
+  );
+};
+
+const Page = () => {
+  return (
+    <Suspense>
+      <PageComponent></PageComponent>
+    </Suspense>
   );
 };
 
