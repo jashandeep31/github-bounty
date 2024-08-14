@@ -8,18 +8,16 @@ COPY package-lock.json ./
 
 COPY apps/user/package*.json ./
 
-# Install dependencies for the user app
-RUN npm install
 
-# Copy the entire user app into the working directory
 COPY . .
-RUN npm run build
+RUN npm install
+RUN npm run build --filter=@repo/db --filter=@repo/ui
 
-# Expose the port that the user app will run on
-EXPOSE 8000
+
 WORKDIR /app/apps/user
 RUN npm run build
 
+EXPOSE 3000
 
 
 CMD ["npm", "start"]

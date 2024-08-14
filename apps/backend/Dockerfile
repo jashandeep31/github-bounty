@@ -9,11 +9,11 @@ COPY package-lock.json ./
 COPY apps/backend/package*.json ./
 
 # Install dependencies for the backend app
-RUN npm install
-
-# Copy the entire backend app into the working directory
 COPY . .
-RUN npm run build
+
+RUN npm install
+RUN  npm run build --filter=@repo/db --filter=@repo/queue
+# Copy the entire backend app into the working directory
 
 # Expose the port that the backend app will run on
 EXPOSE 8000
