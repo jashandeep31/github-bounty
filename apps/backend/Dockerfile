@@ -15,10 +15,11 @@ RUN npm install
 # RUN  npm run build --filter=@repo/db --filter=@repo/queue
 # Copy the entire backend app into the working directory
 
+WORKDIR /app/packages/db
+RUN npx prisma generate
 # Expose the port that the backend app will run on
-EXPOSE 8000
 WORKDIR /app/apps/backend
-RUN npm run build
+EXPOSE 8000
 
 
 
