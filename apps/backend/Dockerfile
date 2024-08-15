@@ -8,13 +8,14 @@ COPY package-lock.json ./
 
 COPY apps/backend/package*.json ./
 
+RUN npm install
+
 COPY . .
 
 
 RUN rm -rf /app/apps/user
 RUN rm -rf /app/apps/maintainer
 
-RUN npm install
 
 WORKDIR /app/packages/db
 RUN npx prisma generate
