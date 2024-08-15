@@ -22,6 +22,7 @@ RUN npx prisma generate
 
 
 WORKDIR /app/apps/backend
+RUN npm install
 EXPOSE 8000
 
 
