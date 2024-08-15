@@ -1,13 +1,11 @@
 import { Queue, Worker } from "bullmq";
 import { db } from "../lib/db.js";
-import dotenv from "dotenv";
 import {
   Connection,
   Keypair,
   ParsedAccountData,
   PublicKey,
   sendAndConfirmTransaction,
-  SystemProgram,
   Transaction,
 } from "@solana/web3.js";
 import bs58 from "bs58";
@@ -16,8 +14,6 @@ import {
   getOrCreateAssociatedTokenAccount,
   createTransferInstruction,
 } from "@solana/spl-token";
-
-dotenv.config();
 
 console.log(process.env.URI);
 const payoutQueue = new Queue("payout-queue", {
