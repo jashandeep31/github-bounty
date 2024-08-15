@@ -12,7 +12,7 @@ COPY apps/backend/package*.json ./
 COPY . .
 
 RUN npm install
-RUN  npm run build --filter=@repo/db --filter=@repo/queue
+# RUN  npm run build --filter=@repo/db --filter=@repo/queue
 # Copy the entire backend app into the working directory
 
 # Expose the port that the backend app will run on
