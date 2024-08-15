@@ -12,7 +12,6 @@ COPY apps/backend/package*.json ./
 COPY . .
 
 RUN npm install
-# RUN  npm run build --filter=@repo/db --filter=@repo/queue
 # Copy the entire backend app into the working directory
 
 WORKDIR /app/packages/db
@@ -24,4 +23,4 @@ EXPOSE 8000
 
 
 # Run the backend app using npx tsx
-CMD ["npx", "tsx", "src/index.ts"]
+CMD ["npx", "tsx", "src/index.ts"  ]

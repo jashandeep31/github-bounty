@@ -14,9 +14,11 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@repo/queue": "*",
     "@repo/db": "*",
+    "@solana/spl-token": "^0.4.8",
+    "@solana/web3.js": "^1.95.2",
     "@types/jsonwebtoken": "^9.0.6",
+    "bullmq": "^5.12.6",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",

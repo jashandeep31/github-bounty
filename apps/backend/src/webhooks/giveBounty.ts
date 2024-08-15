@@ -6,7 +6,7 @@ import {
   fetchOrCreateRepo,
 } from "./handlers.js";
 import z from "zod";
-import { putItemInPayoutQueue } from "@repo/queue";
+import { putItemInPayoutQueue } from "../queue/index.js";
 
 export const giveBounty = async ({
   issueUrl,

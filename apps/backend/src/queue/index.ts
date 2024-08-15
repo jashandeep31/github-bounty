@@ -1,5 +1,5 @@
 import { Queue, Worker } from "bullmq";
-import { db } from "./lib/db.js";
+import { db } from "../lib/db.js";
 import dotenv from "dotenv";
 import {
   Connection,
@@ -19,10 +19,11 @@ import {
 
 dotenv.config();
 
+console.log(process.env.URI);
 const payoutQueue = new Queue("payout-queue", {
   connection: {
     host: process.env.URI,
-    port: 6379,
+    port: 25061,
     username: "default",
     password: process.env.PASSWORD,
   },
@@ -219,9 +220,9 @@ const payoutWorker = new Worker(
   {
     connection: {
       host: process.env.URI,
-      port: 6379,
+      port: 25061,
       username: "default",
-      // password: process.env.PASSWORD,
+      password: process.env.PASSWORD,
     },
   }
 );
