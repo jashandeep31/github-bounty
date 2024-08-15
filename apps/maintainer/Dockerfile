@@ -9,9 +9,9 @@ COPY package-lock.json ./
 COPY apps/maintainer/package*.json ./
 
 
-RUN npm install
 
 COPY . .
+RUN npm install
 # RUN npm run build --filter=@repo/db --filter=@repo/ui
 
 WORKDIR /app/packages/db

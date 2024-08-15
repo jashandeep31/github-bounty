@@ -8,9 +8,9 @@ COPY package-lock.json ./
 
 COPY apps/user/package*.json ./
 
-RUN npm install
 
 COPY . .
+RUN npm install
 
 RUN rm -rf /app/apps/backend
 RUN rm -rf /app/apps/maintainer
