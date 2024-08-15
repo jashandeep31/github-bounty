@@ -24,12 +24,19 @@ export const checkStatus = async (req: Request, res: Response) => {
         },
       });
       if (!isRepo) {
+        const organization = await db.organization.findUnique({
+          where: {
+            name: params.user,
+          },
+        });
+
+        if (!organization) throw new Error("Organization not found ");
         await db.repo.create({
           data: {
             reponame: params.user + "/" + params.repo,
             link: `https://github.com/${params.user}/${params.repo}`,
             // TODO: Changing id is required brother
-            organizationId: "57db0784-2eba-4c4f-8a83-7c808c09b3c6",
+            organizationId: organization.id,
             totalIssues: 0,
           },
         });
@@ -41,6 +48,7 @@ export const checkStatus = async (req: Request, res: Response) => {
       throw new Error("Something went wrong");
     }
   } catch (error) {
+    console.log(error);
     return res.status(404).json({
       message: "Unable to  idenity app",
     });

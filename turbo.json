@@ -20,6 +20,14 @@
       "dependsOn": ["^lint"]
     },
     "dev": {
+      "env": [
+        "PUBLIC_BACKEND_URL",
+        "USER_URL",
+        "APP_ID",
+        "PUBLIC_MAINTAINER_URL",
+        "WALLET_PUBLIC_KEY",
+        "MINT_PUBLIC_KEY"
+      ],
       "dependsOn": ["^db:generate"],
       "cache": false,
       "persistent": true

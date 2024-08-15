@@ -30,7 +30,7 @@ const TableRowComponent = ({
     try {
       setRefreshButtonState("loading");
       const res = await axios.get(
-        `${process.env.PUBLIC_BACKEND_URL}api/v1/app/check-access/${reponame}`
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}api/v1/app/check-access/${reponame}`
       );
       if (res.status === 200) {
         router.refresh();

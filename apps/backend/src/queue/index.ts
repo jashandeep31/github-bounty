@@ -9,13 +9,13 @@ import {
   Transaction,
 } from "@solana/web3.js";
 import bs58 from "bs58";
-
+import dotenv from "dotenv";
 import {
   getOrCreateAssociatedTokenAccount,
   createTransferInstruction,
 } from "@solana/spl-token";
+dotenv.config();
 
-console.log(process.env.URI);
 const payoutQueue = new Queue("payout-queue", {
   connection: {
     host: process.env.URI,
