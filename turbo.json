@@ -6,10 +6,10 @@
     "build": {
       "dependsOn": ["^build"],
       "env": [
-        "BACKEND_URL",
+        "PUBLIC_BACKEND_URL",
         "USER_URL",
         "APP_ID",
-        "MAINTAINER_URL",
+        "PUBLIC_MAINTAINER_URL",
         "WALLET_PUBLIC_KEY",
         "MINT_PUBLIC_KEY"
       ],
