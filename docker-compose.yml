@@ -9,22 +9,22 @@ services:
     ports:
       - "8000:8000"
 
-  # user:
-  #   image: user:latest
-  #   build:
-  #     context: . # Set the context to the root directory
-  #     dockerfile: ./apps/user/Dockerfile
-  #   depends_on:
-  #     - backend
-  #   ports:
-  #     - "3000:3000"
+  user:
+    image: user:latest
+    build:
+      context: . # Set the context to the root directory
+      dockerfile: ./apps/user/Dockerfile
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
 
-  # maintainer:
-  #   image: maintainer:latest
-  #   build:
-  #     context: . # Set the context to the root directory
-  #     dockerfile: ./apps/maintainer/Dockerfile
-  #   depends_on:
-  #     - user
-  #   ports:
-  #     - "3001:3001"
+  maintainer:
+    image: maintainer:latest
+    build:
+      context: . # Set the context to the root directory
+      dockerfile: ./apps/maintainer/Dockerfile
+    depends_on:
+      - user
+    ports:
+      - "3001:3001"

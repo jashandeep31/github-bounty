@@ -8,15 +8,18 @@ COPY package-lock.json ./
 
 COPY apps/backend/package*.json ./
 
-# Install dependencies for the backend app
 COPY . .
 
+
+RUN rm -rf /app/apps/user
+RUN rm -rf /app/apps/maintainer
+
 RUN npm install
-# Copy the entire backend app into the working directory
 
 WORKDIR /app/packages/db
 RUN npx prisma generate
-# Expose the port that the backend app will run on
+
+
 WORKDIR /app/apps/backend
 EXPOSE 8000
 
