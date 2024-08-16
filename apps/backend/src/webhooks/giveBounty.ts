@@ -143,7 +143,7 @@ const processBounty = async ({
         organizationId: organization.id,
         generatedTo: bountyUsername,
         generatedBy: username,
-        link: `payout/custom/link`,
+        link: issue.link,
         amount: bountyAmount,
         status: "PRE_PROCESSING",
         issueId: issue.id,

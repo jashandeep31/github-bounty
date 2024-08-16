@@ -1,17 +1,22 @@
 "use client";
-import { Button, buttonVariants } from "@repo/ui/button";
+import { buttonVariants } from "@repo/ui/button";
 import { cn } from "@repo/ui/utils";
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import UserProfile from "./user-profile-nav";
+import { usePathname } from "next/navigation";
 
 const navbarDesktopLinks: { name: string; link: string }[] = [
   { name: "Home", link: "/" },
-  { name: "Bounties", link: "/bounties" },
+  { name: "Dashboard", link: "/dashboard" },
+  { name: "All Bounties", link: "/bounties" },
+  { name: "Our Projects", link: "/projects" },
+  { name: "Wallet", link: "/wallet" },
 ];
 
 export default function Navbar() {
   const session = useSession();
+  const pathname = usePathname();
   return (
     <div className="py-3">
       <div className="container flex items-center justify-between">
@@ -21,7 +26,7 @@ export default function Navbar() {
             {navbarDesktopLinks.map((link, index) => (
               <nav
                 key={index}
-                className="text-sm text-muted-foreground font-medium hover:text-foreground duration-300"
+                className={`text-sm ${pathname === link.link ? "text-foreground underline" : "text-muted-foreground"} font-medium hover:text-foreground duration-300`}
               >
                 <Link href={link.link}>{link.name}</Link>
               </nav>

@@ -3,6 +3,7 @@ import { buttonVariants } from "@repo/ui/button";
 import { cn } from "@repo/ui/utils";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import UserProfile from "./user-profile-nav";
 
 import { Moon, Sun, Wallet } from "lucide-react";
 import { useTheme } from "next-themes";
@@ -89,6 +90,9 @@ export default function Navbar() {
                 <Wallet size={16} /> ${wallet.amount}
               </span>
             </Link>
+          )}
+          {session.status === "authenticated" && (
+            <UserProfile session={session.data} />
           )}
         </div>
       </div>

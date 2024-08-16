@@ -82,7 +82,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               email: dbUser.email,
               balance: 0,
               userId: dbUser.id,
-              allowedDispancers: [],
+              allowedDispancers: [user.username],
             },
           });
 
