@@ -13,13 +13,6 @@ RUN rm -rf /app/apps/maintainer
 WORKDIR /app/packages/db
 RUN npx prisma generate
 
-FROM node:22-slim 
-WORKDIR /app
-
-
-
-COPY --from=base /app .
-
 WORKDIR /app/apps/backend
 EXPOSE 8000
 
