@@ -1,4 +1,4 @@
-FROM node:22 AS base
+FROM node:22 AS base1
 
 WORKDIR /app
 
@@ -13,7 +13,7 @@ RUN rm -rf /app/apps/maintainer
 WORKDIR /app/packages/db
 RUN npx prisma generate
 FROM node:22-slim 
-COPY --from=base /app .
+COPY --from=base1 /app .
 
 
 WORKDIR /app/apps/user
