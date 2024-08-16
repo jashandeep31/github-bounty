@@ -14,8 +14,6 @@ services:
     build:
       context: . # Set the context to the root directory
       dockerfile: ./apps/user/Dockerfile
-    depends_on:
-      - backend
     ports:
       - "3000:3000"
 
@@ -24,7 +22,5 @@ services:
     build:
       context: . # Set the context to the root directory
       dockerfile: ./apps/maintainer/Dockerfile
-    depends_on:
-      - user
     ports:
       - "3001:3001"
