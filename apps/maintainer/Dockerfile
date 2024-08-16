@@ -15,12 +15,11 @@ RUN rm -rf /app/apps/user
 WORKDIR /app/packages/db
 RUN npx prisma generate
 
-WORKDIR /app/apps/maintainer
-RUN npm run build
 
 FROM node:22-slim 
 COPY --from=base /app .
 
 WORKDIR /app/apps/maintainer
+RUN npm run build
 EXPOSE 3001
 CMD ["npm", "start"]
