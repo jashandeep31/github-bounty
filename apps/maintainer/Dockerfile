@@ -16,8 +16,8 @@ WORKDIR /app/packages/db
 RUN npx prisma generate
 
 
-FROM node:22-slim 
-COPY --from=base2 /app .
+# FROM node:22-slim 
+# COPY --from=base2 /app .
 
 WORKDIR /app/apps/maintainer
 RUN npm run build

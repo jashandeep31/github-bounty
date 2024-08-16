@@ -12,8 +12,8 @@ RUN rm -rf /app/apps/maintainer
 
 WORKDIR /app/packages/db
 RUN npx prisma generate
-FROM node:22-slim 
-COPY --from=base1 /app .
+# FROM node:22-slim 
+# COPY --from=base1 /app .
 
 
 WORKDIR /app/apps/user
