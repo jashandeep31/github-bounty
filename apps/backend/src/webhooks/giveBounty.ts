@@ -43,7 +43,6 @@ export const giveBounty = async ({
   const organization = repo.organization;
   const isAllowedDispenser = checkDispenserPermissions(organization, username);
 
-  console.log(`this is working`);
   if (!isAllowedDispenser) return;
 
   const issue = await fetchOrCreateIssue(
@@ -63,6 +62,7 @@ export const giveBounty = async ({
       createdAt: "desc",
     },
   });
+  console.log(`this is working`);
   const transaction = await processBounty({
     bountyAmount,
     username,
@@ -91,16 +91,16 @@ export const giveBounty = async ({
   `;
 
   try {
-    octokit.request(
-      "POST /repos/{owner}/{repo}/issues/{issue_number}/comments",
+    // octokit.request(
+    //   "POST /repos/{owner}/{repo}/issues/{issue_number}/comments",
 
-      {
-        owner: payload.repository.owner.login,
-        repo: payload.repository.name,
-        issue_number: payload.issue.number,
-        body: message,
-      }
-    );
+    //   {
+    //     owner: payload.repository.owner.login,
+    //     repo: payload.repository.name,
+    //     issue_number: payload.issue.number,
+    //     body: message,
+    //   }
+    // );
     console.log(`done`);
   } catch (error: any) {
     if (error.response) {
@@ -123,6 +123,7 @@ const processBounty = async ({
   bountiesOfIssue: Bounty[];
 }): Promise<{ payout: Payout; bounty: Bounty }> => {
   const transaction = await db.$transaction(async (tx) => {
+    console.log(bountiesOfIssue[0]);
     const bounty = await tx.bounty.upsert({
       where: {
         id: bountiesOfIssue[0]?.id,
@@ -149,7 +150,10 @@ const processBounty = async ({
         issueId: issue.id,
       },
     });
-    putItemInPayoutQueue(payout.id);
+    console.log(`in process`);
+    await putItemInPayoutQueue(payout.id);
+    console.log(`is bounty`);
+
     return { payout, bounty };
   });
   return transaction;

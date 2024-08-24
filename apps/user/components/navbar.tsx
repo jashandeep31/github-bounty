@@ -5,18 +5,54 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import UserProfile from "./user-profile-nav";
 import { usePathname } from "next/navigation";
+import { Moon, Sun, Wallet } from "lucide-react";
+import { useTheme } from "next-themes";
+
+import { Button } from "@repo/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@repo/ui/dropdown";
 
 const navbarDesktopLinks: { name: string; link: string }[] = [
   { name: "Home", link: "/" },
   { name: "Dashboard", link: "/dashboard" },
   { name: "All Bounties", link: "/bounties" },
-  { name: "Our Projects", link: "/projects" },
+  { name: "Explore Projects", link: "/projects" },
   { name: "Wallet", link: "/wallet" },
 ];
 
 export default function Navbar() {
   const session = useSession();
   const pathname = usePathname();
+
+  const { setTheme } = useTheme();
+
+  const Toggler = () => (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline" className="border-none" size="icon">
+          <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+          <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+          <span className="sr-only">Toggle theme</span>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem onClick={() => setTheme("light")}>
+          Light
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme("dark")}>
+          Dark
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme("system")}>
+          System
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+
   return (
     <div className="py-3">
       <div className="container flex items-center justify-between">
@@ -34,6 +70,8 @@ export default function Navbar() {
           </div>
         </div>
         <div className="flex items-center gap-2">
+          <Toggler />
+
           {session.status === "unauthenticated" ? (
             <Link
               href={"/login"}

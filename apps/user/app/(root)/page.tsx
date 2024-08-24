@@ -26,7 +26,7 @@ export default async function page() {
           </h1>
           <p className="max-w-[42rem] leading-normal text-muted-foreground sm:text-lg sm:leading-7">
             Easily dispense your bounties in USDT on the Solana blockchain
-            directly from your repo’s issues page.
+            directly from your issue/pull request.
           </p>
 
           <div className="space-x-4">

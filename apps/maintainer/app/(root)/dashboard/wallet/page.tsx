@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import React, { Suspense, useCallback, useEffect, useState } from "react";
 import WalletActions from "./components/WalletActions";
 import { Payment } from "@repo/db";
-import { getOrganizationPayments } from "./_actions";
+import { getOrganizationPayments, unlinkWallet } from "./_actions";
 import {
   Table,
   TableBody,
@@ -74,8 +74,19 @@ const PageComponent = () => {
             {wallet.state === "connected" ? wallet.amount : null}
           </h2>
         </div>
-        <div className="mt-6">
+        <div className="mt-6 space-x-4">
           <Button onClick={() => setWalletActionState(true)}>Add Funds</Button>
+          {session.data.organization.publicKey && (
+            <Button
+              onClick={() => {
+                unlinkWallet();
+              }}
+              variant={"outline"}
+              className="border-red-500 text-red-500 hover:text-white hover:bg-red-500 duration-300"
+            >
+              Unlink wallet
+            </Button>
+          )}
         </div>
       </div>
       <div className="md:mt-12 mt-6">

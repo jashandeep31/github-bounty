@@ -3,6 +3,7 @@ import { Inter, Kanit } from "next/font/google";
 import "./globals.css";
 import { SessionProvider } from "next-auth/react";
 import WalletProviderWrapper from "@/providers/wallet-proivder";
+import { ThemeProvider } from "@/providers/theme-provider";
 
 // const inter = Inter({ subsets: ["latin"] });
 const kanit = Kanit({
@@ -21,12 +22,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <WalletProviderWrapper>
-        <SessionProvider>
-          <body className={kanit.className}>{children}</body>
-        </SessionProvider>
-      </WalletProviderWrapper>
+    <html lang="en" suppressHydrationWarning>
+      <head />
+      <body className={kanit.className}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <WalletProviderWrapper>
+            <SessionProvider>{children}</SessionProvider>
+          </WalletProviderWrapper>
+        </ThemeProvider>
+      </body>
     </html>
   );
 }

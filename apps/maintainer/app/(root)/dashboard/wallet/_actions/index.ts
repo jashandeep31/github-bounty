@@ -1,6 +1,6 @@
 "use server";
 
-import { auth } from "@/lib/auth";
+import { auth, unstable_update } from "@/lib/auth";
 import nacl from "tweetnacl";
 import bs58 from "bs58";
 import { decodeUTF8 } from "tweetnacl-util";
@@ -224,3 +224,42 @@ const calculateTransferredAmount = (
 
   return { transferredAmount, receivedAmount };
 };
+
+export async function unlinkWallet() {
+  try {
+    const _session = await auth();
+    const session = _session
+      ? verifyUserBasicAuthAndProperOrganization(_session)
+      : null;
+    if (!session) {
+      throw new Error("Authentication not found");
+    }
+
+    const organization = await db.organization.update({
+      where: {
+        id: session.organization.id,
+      },
+      data: {
+        publicKey: null,
+      },
+    });
+    const user = await db.user.findUnique({
+      where: {
+        email: session.user.email,
+      },
+    });
+    unstable_update({
+      ...user,
+      organization: organization,
+    });
+    return {
+      status: 200,
+      message: "Unlinked wallet successfully",
+    };
+  } catch (error) {
+    return {
+      status: 400,
+      message: "Failed to unlink wallet",
+    };
+  }
+}
