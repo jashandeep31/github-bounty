@@ -44,7 +44,6 @@ const PageComponent = () => {
   useEffect(() => {
     getPayments();
   }, [getPayments]);
-
   if (session?.status === "loading")
     return (
       <h1 className="text-xl  md:mt-12 mt-6 font-bold container">
@@ -76,10 +75,12 @@ const PageComponent = () => {
         </div>
         <div className="mt-6 space-x-4">
           <Button onClick={() => setWalletActionState(true)}>Add Funds</Button>
+
           {session.data.organization.publicKey && (
             <Button
-              onClick={() => {
-                unlinkWallet();
+              onClick={async () => {
+                await unlinkWallet();
+                session.update({ ...session.data });
               }}
               variant={"outline"}
               className="border-red-500 text-red-500 hover:text-white hover:bg-red-500 duration-300"

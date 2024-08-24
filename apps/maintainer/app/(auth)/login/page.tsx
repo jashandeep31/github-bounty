@@ -15,6 +15,7 @@ const Page = () => {
     }
   }, [session, router]);
 
+  console.log(session.data);
   return (
     <div className="container min-h-screen flex items-center justify-center">
       <div className="border rounded-md p-3 lg:w-1/3">

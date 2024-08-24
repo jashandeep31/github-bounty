@@ -6,9 +6,11 @@ import React, { useCallback } from "react";
 import { toast } from "sonner";
 import { verifyMessageAndUpdatePublicKey } from "../_actions";
 import bs58 from "bs58";
+import { useSession } from "next-auth/react";
 
 const SignMessge = () => {
   const { publicKey, signMessage } = useWallet();
+  const session = useSession();
   const signMessageFunction = useCallback(async () => {
     const toastId = toast.loading("Processing the message");
     try {
@@ -26,11 +28,12 @@ const SignMessge = () => {
         publicKey: publicKey.toBase58(),
         message: rawMessage,
       });
+      session.update({ ...session.data });
       toast.success("Success!", { id: toastId });
     } catch (err: any) {
       toast.error(err?.message || "Something went wrong ", { id: toastId });
     }
-  }, [publicKey, signMessage]);
+  }, [publicKey, signMessage, session]);
   return (
     <div className="flex flex-col items-center">
       <h1 className="lg:text-3xl font-bold">Sign Message</h1>

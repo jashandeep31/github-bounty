@@ -1,6 +1,6 @@
 "use server";
 
-import { auth, unstable_update } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 import nacl from "tweetnacl";
 import bs58 from "bs58";
 import { decodeUTF8 } from "tweetnacl-util";
@@ -43,13 +43,14 @@ export const verifyMessageAndUpdatePublicKey = async ({
       new PublicKey(publicKey).toBytes()
     );
     if (!isValid) throw new Error("Not valid signature");
-    await db.organization.update({
+    const organization = await db.organization.update({
       where: {
         id: session.organization.id,
       },
       data: {
         publicKey: publicKey,
       },
+      include: { user: true },
     });
   } catch (e: any) {
     throw new Error(e?.message || "Something went wrong");
@@ -248,10 +249,7 @@ export async function unlinkWallet() {
         email: session.user.email,
       },
     });
-    unstable_update({
-      ...user,
-      organization: organization,
-    });
+
     return {
       status: 200,
       message: "Unlinked wallet successfully",
