@@ -18,6 +18,7 @@ import {
 
 const navbarDesktopLinks: { name: string; link: string }[] = [
   { name: "Home", link: "/" },
+  { name: "Docs", link: "/dashboard" },
   { name: "Dashboard", link: "/dashboard" },
   { name: "All Bounties", link: "/bounties" },
   { name: "Explore Projects", link: "/projects" },

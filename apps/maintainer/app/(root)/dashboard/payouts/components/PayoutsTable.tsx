@@ -1,24 +1,14 @@
 "use client";
 import { Payout } from "@repo/db";
 import React from "react";
-import { Badge } from "@repo/ui/badge";
-import { MoreHorizontal } from "lucide-react";
-import { Button } from "@repo/ui/button";
 import {
   Table,
   TableBody,
-  TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@repo/ui/table";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from "@repo/ui/dropdown";
+
 import { useSearchParams } from "next/navigation";
 import {
   Pagination,
@@ -29,6 +19,49 @@ import {
   PaginationPrevious,
 } from "@repo/ui/pagination";
 import { cn } from "@repo/ui/utils";
+import PayoutsTableRow from "./payoutsTableRow";
+
+const PaginationComponent = ({
+  page,
+  payouts,
+}: {
+  page: number;
+  payouts: Payout[];
+}) => {
+  return (
+    <Pagination className="mt-6">
+      <PaginationContent>
+        <PaginationItem>
+          <PaginationPrevious
+            href={
+              page <= 1
+                ? `/dashboard/payouts?page=1`
+                : `/dashboard/payouts?page=${page - 1}`
+            }
+            shallow
+            className={cn(page <= 1 && "text-muted opacity-50")}
+          />
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationLink href="#" isActive>
+            {page}
+          </PaginationLink>
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationNext
+            className={cn(payouts.length <= 10 && "text-muted opacity-50")}
+            href={
+              payouts.length > 10
+                ? `/dashboard/payouts?page=${page + 1}`
+                : `/dashboard/payouts?page=${page}`
+            }
+            shallow
+          />
+        </PaginationItem>
+      </PaginationContent>
+    </Pagination>
+  );
+};
 
 const PayoutsTable = ({ payouts }: { payouts: Payout[] }) => {
   const searchParams = useSearchParams();
@@ -51,78 +84,11 @@ const PayoutsTable = ({ payouts }: { payouts: Payout[] }) => {
         </TableHeader>
         <TableBody>
           {payouts.slice(0, 10).map((payout) => (
-            <TableRow key={payout.id}>
-              <TableCell>
-                <div className="font-medium">{payout.generatedTo}</div>
-              </TableCell>
-              <TableCell className="hidden sm:table-cell">
-                {payout.generatedBy}
-              </TableCell>
-              <TableCell className="hidden sm:table-cell">
-                <Badge className="text-xs capitalize" variant="secondary">
-                  {payout.status.toLocaleLowerCase().split("_").join(" ")}
-                </Badge>
-              </TableCell>
-              <TableCell className="hidden md:table-cell">
-                <div className="font-medium">
-                  {payout.createdAt.toLocaleDateString()}
-                </div>
-                <div className="hidden text-sm text-muted-foreground md:inline">
-                  {payout.createdAt.toLocaleTimeString()}
-                </div>
-              </TableCell>
-              <TableCell className="text-left">${payout.amount}</TableCell>
-              <TableCell className="text-right">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button aria-haspopup="true" size="icon" variant="ghost">
-                      <MoreHorizontal className="h-4 w-4" />
-                      <span className="sr-only">Toggle menu</span>
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>Coming soon</DropdownMenuLabel>
-                    <DropdownMenuItem>-</DropdownMenuItem>
-                    <DropdownMenuItem>-</DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </TableCell>
-            </TableRow>
+            <PayoutsTableRow payout={payout} key={payout.id} />
           ))}
         </TableBody>
       </Table>
-      <Pagination className="mt-6">
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious
-              href={
-                page <= 1
-                  ? `/dashboard/payouts?page=1`
-                  : `/dashboard/payouts?page=${page - 1}`
-              }
-              shallow
-              className={cn(page <= 1 && "text-muted opacity-50")}
-            />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#" isActive>
-              {" "}
-              {page}
-            </PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext
-              className={cn(payouts.length <= 10 && "text-muted opacity-50")}
-              href={
-                payouts.length > 10
-                  ? `/dashboard/payouts?page=${page + 1}`
-                  : `/dashboard/payouts?page=${page}`
-              }
-              shallow
-            />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
+      <PaginationComponent payouts={payouts} page={page} />
     </div>
   );
 };

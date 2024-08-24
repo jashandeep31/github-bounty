@@ -4,6 +4,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import React from "react";
 import BountyCard from "./components/BountyCard";
+import { CircleDot } from "lucide-react";
 
 async function getIssue(link: string) {
   link = `https://github.com/` + link;
@@ -46,14 +47,15 @@ export default async function page({
   }
   return (
     <div className="container md:mt-12 mt-6">
-      <h1 className="md:text-2xl text-lg font-bold">{issue.title}</h1>
-      <div className="mt-3 ml-3">
+      <h1 className="md:text-2xl text-lg font-bold flex items-center gap-2">
+        <CircleDot size={20} className="text-green-500" />
+        <span>{issue.title}</span>
+      </h1>
+      <div className="mt-3 ml-3 text-muted-foreground text-sm">
         {issue.body ? (
           issue.body
         ) : (
-          <span className="text-muted-foreground text-xs">
-            Issue/pull doesn&apos;t contain body
-          </span>
+          <span>Issue/pull doesn&apos;t contain body</span>
         )}
       </div>
 

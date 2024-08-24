@@ -4,6 +4,7 @@ import "./globals.css";
 import { SessionProvider } from "next-auth/react";
 import WalletProviderWrapper from "@/providers/wallet-proivder";
 import { ThemeProvider } from "@/providers/theme-provider";
+import { Toaster } from "sonner";
 
 // const inter = Inter({ subsets: ["latin"] });
 const kanit = Kanit({
@@ -33,6 +34,7 @@ export default function RootLayout({
         >
           <WalletProviderWrapper>
             <SessionProvider>{children}</SessionProvider>
+            <Toaster />
           </WalletProviderWrapper>
         </ThemeProvider>
       </body>
