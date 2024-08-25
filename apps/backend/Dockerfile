@@ -19,4 +19,4 @@ RUN npx prisma generate
 WORKDIR /app/apps/backend
 EXPOSE 8000
 
-CMD ["npm", "start" ]
+CMD ["npx", "tsx", "src/index.ts" ]
