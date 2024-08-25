@@ -23,7 +23,7 @@ const payoutQueue = new Queue("payout-queue", {
     host: process.env.URI,
     port: 6379,
     username: "default",
-    // password: process.env.PASSWORD,
+    password: process.env.REDIS_PASSWORD,
   },
 });
 
@@ -201,7 +201,7 @@ const payoutWorker = new Worker(
       host: process.env.URI,
       port: 6379,
       username: "default",
-      // password: process.env.PASSWORD,
+      password: process.env.REDIS_PASSWORD,
     },
   }
 );
