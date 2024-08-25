@@ -3,6 +3,7 @@ import React from "react";
 
 import BountyCard from "./components/bountyCard";
 
+export const revalidate = 10;
 async function getBounties() {
   return await db.bounty.findMany({
     where: {
