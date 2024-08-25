@@ -6,8 +6,8 @@ WORKDIR /app
 COPY package.json ./
 COPY package-lock.json ./
 COPY apps/user/package*.json ./
-COPY apps/db/package*.json ./
-COPY apps/ui/package*.json ./
+COPY packages/db/package*.json ./
+COPY packages/ui/package*.json ./
 RUN npm install
 
 
