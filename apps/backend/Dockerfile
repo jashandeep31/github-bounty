@@ -25,6 +25,7 @@ WORKDIR /app/apps/backend
 FROM node:22-slim 
 COPY --from=base /app .
 
+WORKDIR /app/apps/backend
 EXPOSE 8000
 
 CMD ["npm", "start" ]
