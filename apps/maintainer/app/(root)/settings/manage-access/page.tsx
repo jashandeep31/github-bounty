@@ -33,8 +33,8 @@ const Page = () => {
         <div className="mt-6">
           <h3 className="text-sm font-medium ">Allowed Dispancers</h3>
           <div className="flex flex-wrap gap-2 mt-2">
-            {allowedDispancers.map((dispencer) => (
-              <p className="bg-muted p-2  flex itmes-center gap-1">
+            {allowedDispancers.map((dispencer, index) => (
+              <p className="bg-muted p-2  flex itmes-center gap-1" key={index}>
                 <span>{dispencer}</span>
                 <button
                   onClick={() => {
