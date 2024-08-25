@@ -1,4 +1,4 @@
-FROM node:22 
+FROM node:22  as base
 
 WORKDIR /app
 
@@ -15,6 +15,9 @@ RUN npx prisma generate
 
 
 WORKDIR /app/apps/backend
+FROM node:22-slim 
+COPY --from=base /app .
+
 EXPOSE 8000
 
 CMD ["npx", "tsx", "src/index.ts" ]
