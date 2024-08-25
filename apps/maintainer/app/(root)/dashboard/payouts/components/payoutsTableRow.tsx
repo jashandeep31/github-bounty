@@ -12,6 +12,8 @@ import {
   DropdownMenuTrigger,
 } from "@repo/ui/dropdown";
 import Link from "next/link";
+import { toast } from "sonner";
+import { moveFailedToUnCollected } from "../_actions";
 
 const PayoutsTableRow = ({ payout }: { payout: Payout }) => {
   return (
@@ -60,7 +62,19 @@ const PayoutsTableRow = ({ payout }: { payout: Payout }) => {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem>Indepth Analysis (coming soon)</DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={async () => {
+                const toastId = toast.loading("Making payout uncollected");
+                const res = await moveFailedToUnCollected(payout.id);
+                if (res.status === 200) {
+                  toast.success(res.message, { id: toastId });
+                } else {
+                  toast.error(res.message, { id: toastId });
+                }
+              }}
+            >
+              Make it uncollected
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </TableCell>

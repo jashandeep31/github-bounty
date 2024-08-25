@@ -8,8 +8,6 @@ import {
   TableHeader,
   TableRow,
 } from "@repo/ui/table";
-import { useWalletProvider } from "@/providers/walletContextProvider";
-import { useSearchParams } from "next/navigation";
 import {
   Pagination,
   PaginationContent,

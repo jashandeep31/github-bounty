@@ -37,27 +37,24 @@ const payoutWorker = new Worker(
           id: job.data.id,
         },
       });
-      if (!payout || payout.status !== "PRE_PROCESSING") return;
+      if (!payout) return;
+      console.log(payout.status);
+      if (
+        !(payout.status === "PRE_PROCESSING" || payout.status === "UNCOLLECTED")
+      )
+        return;
 
       const user = await db.user.findUnique({
         where: {
           username: payout.generatedTo,
         },
       });
+
       const organization = await db.organization.findUnique({
         where: {
           id: payout.organizationId,
         },
       });
-      if (!user || !user.publicKey) {
-        await db.payout.update({
-          where: { id: payout.id },
-          data: {
-            status: "UNCOLLECTED",
-          },
-        });
-        return;
-      }
       if (
         !organization ||
         organization.balance < payout.amount ||
@@ -67,6 +64,15 @@ const payoutWorker = new Worker(
           where: { id: payout.id },
           data: {
             status: "FAILED",
+          },
+        });
+        return;
+      }
+      if (!user || !user.publicKey) {
+        await db.payout.update({
+          where: { id: payout.id },
+          data: {
+            status: "UNCOLLECTED",
           },
         });
         return;
@@ -118,7 +124,7 @@ const payoutWorker = new Worker(
           sourceAccount.address,
           destinationAccount.address,
           keypair.publicKey,
-          10 * 1000_1000
+          (payout.amount - 2) * 1000_000
         )
       );
 
@@ -200,11 +206,12 @@ const payoutWorker = new Worker(
   }
 );
 export async function putItemInPayoutQueue(id: string) {
+  console.log`item is added to queue`;
   await payoutQueue.add(
     "payment out",
     {
       id,
     },
-    { delay: 100 }
+    { delay: 1000 }
   );
 }

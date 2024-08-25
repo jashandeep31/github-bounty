@@ -88,19 +88,23 @@ export const giveBounty = async ({
       : ``
   }
   ${!isUser?.publicKey ? "🔑 Dear winner, please connect your wallet to your account to receive your payment." : ""}
+
+  ${organization.balance < transaction.payout.amount ? `🚨 The organization has insufficient funds to pay the bounty. Please put the money before we dispance else this going to fail.` : ""}
+  
+  
   `;
 
   try {
-    // octokit.request(
-    //   "POST /repos/{owner}/{repo}/issues/{issue_number}/comments",
+    octokit.request(
+      "POST /repos/{owner}/{repo}/issues/{issue_number}/comments",
 
-    //   {
-    //     owner: payload.repository.owner.login,
-    //     repo: payload.repository.name,
-    //     issue_number: payload.issue.number,
-    //     body: message,
-    //   }
-    // );
+      {
+        owner: payload.repository.owner.login,
+        repo: payload.repository.name,
+        issue_number: payload.issue.number,
+        body: message,
+      }
+    );
     console.log(`done`);
   } catch (error: any) {
     if (error.response) {
@@ -123,10 +127,9 @@ const processBounty = async ({
   bountiesOfIssue: Bounty[];
 }): Promise<{ payout: Payout; bounty: Bounty }> => {
   const transaction = await db.$transaction(async (tx) => {
-    console.log(bountiesOfIssue[0]);
     const bounty = await tx.bounty.upsert({
       where: {
-        id: bountiesOfIssue[0]?.id,
+        id: bountiesOfIssue[0]?.id ? bountiesOfIssue[0].id : "0",
       },
       update: {
         isOpen: false,
@@ -139,6 +142,7 @@ const processBounty = async ({
       },
     });
 
+    console.log(bounty);
     const payout = await tx.payout.create({
       data: {
         organizationId: organization.id,

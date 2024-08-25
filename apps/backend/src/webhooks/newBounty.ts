@@ -20,13 +20,12 @@ export const newBounty = async ({
   payload: any;
   octokit: any;
 }) => {
+  // TODO: wrap this in to a transaction
   const match = body.match(/\/bounty \$(\d+(?:\.\d{1,2})?)/);
   if (!match) return;
-
   const repo = await fetchOrCreateRepo(reponame);
   const organization = repo.organization;
   const isAllowedDispenser = checkDispenserPermissions(organization, username);
-  console.log(username, organization.allowedDispancers);
   if (!isAllowedDispenser) return;
   const issue = await fetchOrCreateIssue(
     issueUrl,
@@ -43,6 +42,16 @@ export const newBounty = async ({
       issueId: issue.id,
     },
   });
+  await db.issue.update({
+    where: { id: issue.id },
+    data: { bountiesPrice: { increment: bounty.amount } },
+  });
+
+  await db.repo.update({
+    where: { id: repo.id },
+    data: { totalIssues: { increment: 1 } },
+  });
+
   const message = `
   🎉 Congratulations! Your bounty has been successfully registered and will be visible on our website.
   🏅 To award the bounty, use the command \`/give-bounty $${bounty.amount} @username\`.
