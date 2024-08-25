@@ -5,8 +5,11 @@ WORKDIR /app
 COPY package.json ./
 COPY package-lock.json ./
 COPY apps/user/package*.json ./
-COPY . .
+COPY packages/db/package*.json ./
+COPY packages/ui/package*.json ./
 RUN npm install
+
+COPY . .
 RUN rm -rf /app/apps/backend
 RUN rm -rf /app/apps/maintainer
 

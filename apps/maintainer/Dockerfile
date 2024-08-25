@@ -6,9 +6,10 @@ WORKDIR /app
 COPY package.json ./
 COPY package-lock.json ./
 COPY apps/maintainer/package*.json ./
-COPY . .
+COPY packages/db/package*.json ./
+COPY packages/ui/package*.json ./
 RUN npm install
-# RUN npm run build --filter=@repo/db --filter=@repo/ui
+COPY . .
 RUN rm -rf /app/apps/backend
 RUN rm -rf /app/apps/user
 
