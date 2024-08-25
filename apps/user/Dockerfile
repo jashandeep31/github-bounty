@@ -3,6 +3,14 @@ FROM node:22 AS base1
 WORKDIR /app
 
 
+COPY package.json ./
+COPY package-lock.json ./
+COPY apps/user/package*.json ./
+COPY apps/db/package*.json ./
+COPY apps/ui/package*.json ./
+RUN npm install
+
+
 COPY . .
 RUN rm -rf /app/apps/backend
 RUN rm -rf /app/apps/maintainer
