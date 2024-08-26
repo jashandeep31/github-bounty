@@ -76,6 +76,7 @@ export async function verifyPaymentAndUpdateOrganizationWallet({
     const { transferredAmount, receivedAmount } =
       calculateTransferredAmount(transaction);
     // if (1 == 1) return;
+    console.log(transferredAmount, receivedAmount);
     if (!transaction) {
       throw new Error(
         "Failed to validate the signature, submit signature throught form"
@@ -221,7 +222,9 @@ const calculateTransferredAmount = (
 
   // Calculate the transferred amount
   const transferredAmount = senderBalanceBeforeNum - senderBalanceAfterNum;
-  const receivedAmount = receiverBalanceAfterNum - receiverBalanceBeforeNum;
+  const receivedAmount = Math.abs(
+    receiverBalanceAfterNum - receiverBalanceBeforeNum
+  );
 
   return { transferredAmount, receivedAmount };
 };
