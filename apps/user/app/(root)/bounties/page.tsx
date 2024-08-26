@@ -34,7 +34,7 @@ export default async function page() {
         favorite one.
       </p>
 
-      <div className="mt-6">
+      <div className="mt-6 space-y-3">
         {bounties.map((bounty) => (
           <BountyCard bounty={bounty} issue={bounty.issue} key={bounty.id} />
         ))}
