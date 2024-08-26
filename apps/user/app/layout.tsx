@@ -34,7 +34,7 @@ export default function RootLayout({
         >
           <WalletProviderWrapper>
             <SessionProvider>{children}</SessionProvider>
-            <Toaster />
+            <Toaster richColors />
           </WalletProviderWrapper>
         </ThemeProvider>
       </body>

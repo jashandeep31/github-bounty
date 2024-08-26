@@ -1,15 +1,18 @@
 import { auth } from "@/lib/auth";
 import { buttonVariants } from "@repo/ui/button";
 import { cn } from "@repo/ui/utils";
-import { redirect } from "next/navigation";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import React from "react";
 
 export default async function page() {
   const session = await auth();
   if (session?.user) {
     redirect("/dashboard");
+  } else {
+    redirect("/landing");
   }
+
   return (
     <div>
       <section className="space-y-6 pb-8 pt-6 md:pb-12 md:pt-10 lg:py-32">
@@ -26,7 +29,7 @@ export default async function page() {
           </h1>
           <p className="max-w-[42rem] leading-normal text-muted-foreground sm:text-lg sm:leading-7">
             Easily dispense your bounties in USDT on the Solana blockchain
-            directly from your issue/pull request.
+            directly from your repo’s issues page.
           </p>
 
           <div className="space-x-4">

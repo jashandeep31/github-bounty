@@ -3,7 +3,7 @@ const nextConfig = {
   async rewrites() {
     return [
       {
-        source: "/",
+        source: "/landing",
         destination: "https://cyan-forms-150183.framer.app/",
         basePath: false,
       },

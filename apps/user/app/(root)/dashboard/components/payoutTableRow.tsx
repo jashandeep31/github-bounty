@@ -16,7 +16,7 @@ import { toast } from "sonner";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
-const ActionMenu = ({ id }: { id: string }) => {
+const ActionMenu = ({ id, payout }: { id: string; payout: Payout }) => {
   const router = useRouter();
   const handleResendPayout = async ({ id }: { id: string }) => {
     const toastId = toast.loading("Resending Payout");
@@ -44,7 +44,9 @@ const ActionMenu = ({ id }: { id: string }) => {
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
         <DropdownMenuItem
           onClick={() => {
-            handleResendPayout({ id });
+            payout.status === "UNCOLLECTED"
+              ? handleResendPayout({ id })
+              : toast.error("Only uncollected payouts can be resent");
           }}
         >
           Resend Payout
@@ -97,7 +99,7 @@ const PayoutTableRow = ({
       </TableCell>
       <TableCell className="text-right">${payout.amount}</TableCell>
       <TableCell className="text-right">
-        <ActionMenu id={payout.id} />
+        <ActionMenu id={payout.id} payout={payout} />
       </TableCell>
     </TableRow>
   );
