@@ -4,7 +4,7 @@
   "ui": "tui",
   "tasks": {
     "build": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^db:generate", "^build"],
       "env": [
         "PUBLIC_BACKEND_URL",
         "USER_URL",
