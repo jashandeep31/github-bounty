@@ -78,28 +78,32 @@ octokitApp.webhooks.on("installation.created", async (context) => {
 octokitApp.webhooks.on("installation_repositories.added", async (context) => {
   try {
     const username = context.payload.sender.login;
-    const reponame = context.payload.repositories_added[0]?.name;
-    if (!reponame || !username) return;
+    const reponamesArray = context.payload.repositories_added;
 
-    const isRepo = await db.repo.findUnique({
-      where: {
-        reponame: username + "/" + reponame,
-      },
-    });
-    if (isRepo) return;
-    const organization = await db.organization.findUnique({
-      where: {
-        name: username,
-      },
-    });
-    if (!organization) return;
-    await db.repo.create({
-      data: {
-        reponame: username + "/" + reponame,
-        link: `https://github.com/${username}/${reponame}`,
-        organizationId: organization.id,
-        totalIssues: 0,
-      },
+    reponamesArray?.forEach(async (repo) => {
+      const reponame = repo.name;
+      if (!reponame || !username) return;
+
+      const isRepo = await db.repo.findUnique({
+        where: {
+          reponame: username + "/" + reponame,
+        },
+      });
+      if (isRepo) return;
+      const organization = await db.organization.findUnique({
+        where: {
+          name: username,
+        },
+      });
+      if (!organization) return;
+      await db.repo.create({
+        data: {
+          reponame: username + "/" + reponame,
+          link: `https://github.com/${username}/${reponame}`,
+          organizationId: organization.id,
+          totalIssues: 0,
+        },
+      });
     });
   } catch (e) {}
 });

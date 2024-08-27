@@ -25,7 +25,6 @@ const navbarDesktopLinks: { name: string; link: string; newTab: boolean }[] = [
     link: "https://jashandeep.notion.site/Docs-of-GitSol-8ba6ea37503a46829caecfe54bc3f637",
     newTab: true,
   },
-  { name: "Dashboard", link: "/dashboard", newTab: false },
   { name: "Wallet", link: "/wallet", newTab: false },
 ];
 
