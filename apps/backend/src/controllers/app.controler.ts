@@ -2,6 +2,7 @@ import axios from "axios";
 import { Request, Response } from "express";
 import { ACCESS_TOKEN } from "../webhooks/index.js";
 import { db } from "../lib/db.js";
+import { putItemInPayoutQueue } from "../queue/index.js";
 
 export const checkStatus = async (req: Request, res: Response) => {
   const params = req.params;
@@ -52,5 +53,34 @@ export const checkStatus = async (req: Request, res: Response) => {
     return res.status(404).json({
       message: "Unable to  idenity app",
     });
+  }
+};
+
+export const putUnCollectedPayoutInQueue = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    await db.$transaction(async (tx) => {
+      const payout =
+        await tx.$executeRaw`SELECT * FROM "Payout" WHERE id = ${req.params.id} AND status = 'UNCOLLECTED' FOR UPDATE`;
+      if (!payout) {
+        throw new Error("Payout not found or not in 'UNCOLLECTED' status");
+      }
+      const updatedPayout = await tx.payout.update({
+        where: {
+          id: req.params.id,
+        },
+        data: {
+          status: "PRE_PROCESSING",
+        },
+      });
+      putItemInPayoutQueue(updatedPayout.id);
+    });
+
+    res.status(200).send("Payout processed successfully");
+  } catch (e: any) {
+    console.log(e);
+    res.status(400).send(e.message);
   }
 };

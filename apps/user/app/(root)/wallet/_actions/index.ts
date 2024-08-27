@@ -38,3 +38,31 @@ export async function verifyMessageAndUpdatePublicKey({
     throw new Error(e?.message || "Something went wrong");
   }
 }
+
+export const removeWallet = async (): Promise<{
+  message: string;
+  status: number;
+}> => {
+  try {
+    const _session = await auth();
+    const session = _session ? verifyUserBasicAuth(_session) : null;
+    if (!session) throw new Error("Authentication failed");
+    await db.user.update({
+      where: {
+        username: session.user.username,
+      },
+      data: {
+        publicKey: null,
+      },
+    });
+    return {
+      message: "Unlink successfull",
+      status: 200,
+    };
+  } catch (error) {
+    return {
+      message: "Something went wrong",
+      status: 500,
+    };
+  }
+};

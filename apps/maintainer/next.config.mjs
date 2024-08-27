@@ -1,5 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  async rewrites() {
+    return [
+      {
+        source: "/landing",
+        destination: "https://cyan-forms-150183.framer.app/",
+        basePath: false,
+      },
+    ];
+  },
   images: {
     remotePatterns: [
       {

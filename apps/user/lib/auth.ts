@@ -35,11 +35,20 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       };
       return newSession as Session;
     },
-    async jwt({ token, user, account }) {
+    async jwt({ token, user, account, trigger, session }) {
       if (user) {
         token.username = user?.username;
         const dbUser = await db.user.findUnique({
           where: { username: user.username },
+        });
+        if (dbUser) {
+          token.publicKey = dbUser.publicKey;
+        }
+      }
+      if (trigger === "update" && session) {
+        token.username = session.user.username;
+        const dbUser = await db.user.findUnique({
+          where: { username: session.user.username },
         });
         if (dbUser) {
           token.publicKey = dbUser.publicKey;

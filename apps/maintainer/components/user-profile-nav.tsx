@@ -49,6 +49,9 @@ const UserProfile = ({ session }: { session: Session }) => {
             <Link href="/dashboard/payouts">Payouts</Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
+          <DropdownMenuItem asChild>
+            <Link href="/settings">Settings</Link>
+          </DropdownMenuItem>
           <DropdownMenuItem
             className="cursor-pointer"
             onSelect={(event) => {

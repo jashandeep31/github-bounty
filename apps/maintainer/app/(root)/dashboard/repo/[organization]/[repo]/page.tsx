@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
 import React from "react";
 import IssueCard from "./components/IssueCard";
+import { FolderGit } from "lucide-react";
 
 async function getRepo(reponame: string) {
   return await db.repo.findUnique({
@@ -43,7 +44,10 @@ export default async function page({
   }
   return (
     <div className="container md:mt-12 mt-6">
-      <h1 className="md:text-2xl text-lg font-bold">{repo.reponame}</h1>
+      <h1 className="md:text-2xl text-lg font-bold flex items-center gap-2">
+        <FolderGit size={20} className="text-blue-500" />
+        <span>{repo.reponame}</span>
+      </h1>
       <p className="text-sm text-muted-foreground">
         This page includes all the issues cotaining the bouties in them.
       </p>

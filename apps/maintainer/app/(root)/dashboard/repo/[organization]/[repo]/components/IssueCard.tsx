@@ -1,5 +1,8 @@
 "use client";
 import { Issue } from "@repo/db";
+import { buttonVariants } from "@repo/ui/button";
+import { cn } from "@repo/ui/utils";
+import { CircleDot } from "lucide-react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
@@ -15,28 +18,35 @@ const IssueCard = ({ issue }: { issue: Issue }) => {
       href={issue.link.replace("https://github.com/", "/dashboard/repo/")}
       className="border rounded p-3 hover:bg-muted duration-300 mt-5 block"
     >
-      <h2 className="font-bold flex justify-between">
-        {issue.title}{" "}
-        <span className="lowercase text-xs border p-1 rounded-full border-foreground">
-          {issue.status}
-        </span>{" "}
+      <h2 className="font-bold flex items-center gap-1 my-1">
+        <CircleDot size={16} className="text-green-500" />
+        <span>{issue.title}</span>
       </h2>
-
+      <p className="text-xs text-muted-foreground ">
+        {issue.createdAt.toLocaleDateString()}{" "}
+        {issue.createdAt.toLocaleTimeString()}
+      </p>
       <div className="mt-3 ml-3">
-        {issue.body ? (
-          issue.body
-        ) : (
+        {!issue.body ? (
           <span className="text-muted-foreground text-xs">
             Issue/pull doesn&apos;t contain body
           </span>
+        ) : (
+          <span className="text-muted-foreground text-xs">{issue.body}</span>
         )}
       </div>
-      <div className="mt-6">
+      <div className="mt-6 flex flex-wrap items-center gap-2">
         <Link
-          className="text-sm text-muted-foreground hover:text-foreground duration-300 underline"
+          className={cn(buttonVariants({ variant: "default", size: "sm" }))}
+          href={issue.link.replace("https://github.com/", "/dashboard/repo/")}
+        >
+          In depth view
+        </Link>
+        <Link
+          className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
           href={issue.link}
         >
-          Github
+          Open in Github
         </Link>
       </div>
     </Link>

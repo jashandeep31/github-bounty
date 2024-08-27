@@ -1,19 +1,14 @@
-FROM node:22 AS base1
+FROM node:22
 
 WORKDIR /app
 
-COPY package.json ./
-COPY package-lock.json ./
-COPY apps/user/package*.json ./
 COPY . .
-RUN npm install
 RUN rm -rf /app/apps/backend
 RUN rm -rf /app/apps/maintainer
+RUN npm install
 
 WORKDIR /app/packages/db
 RUN npx prisma generate
-# FROM node:22-slim 
-# COPY --from=base1 /app .
 
 
 WORKDIR /app/apps/user

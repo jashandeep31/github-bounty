@@ -2,6 +2,7 @@ import { db } from "@/lib/db";
 import Link from "next/link";
 import React from "react";
 
+export const revalidate = 10;
 async function getRepos() {
   return await db.repo.findMany();
 }

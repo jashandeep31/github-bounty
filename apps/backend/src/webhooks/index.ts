@@ -43,6 +43,38 @@ export const ACCESS_TOKEN = (): string =>
 // 1. create a new task contain /bounty $5
 // 2. somebody create a pull request in which comment /give-bounty $5 @username
 // 3. catch every comment on the issue or the pull request
+octokitApp.webhooks.on("installation.created", async (context) => {
+  try {
+    const username = context.payload.sender.login;
+    const reponamesArray = context.payload.repositories;
+
+    reponamesArray?.forEach(async (repo) => {
+      const reponame = repo.name;
+      if (!reponame || !username) return;
+
+      const isRepo = await db.repo.findUnique({
+        where: {
+          reponame: username + "/" + reponame,
+        },
+      });
+      if (isRepo) return;
+      const organization = await db.organization.findUnique({
+        where: {
+          name: username,
+        },
+      });
+      if (!organization) return;
+      await db.repo.create({
+        data: {
+          reponame: username + "/" + reponame,
+          link: `https://github.com/${username}/${reponame}`,
+          organizationId: organization.id,
+          totalIssues: 0,
+        },
+      });
+    });
+  } catch (e) {}
+});
 octokitApp.webhooks.on("installation_repositories.added", async (context) => {
   try {
     const username = context.payload.sender.login;

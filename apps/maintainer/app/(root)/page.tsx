@@ -9,9 +9,10 @@ export default async function page() {
   const session = await auth();
   if (session?.user) {
     redirect("/dashboard");
+  } else {
+    redirect("/landing");
   }
 
-  console.log(session);
   return (
     <div>
       <section className="space-y-6 pb-8 pt-6 md:pb-12 md:pt-10 lg:py-32">

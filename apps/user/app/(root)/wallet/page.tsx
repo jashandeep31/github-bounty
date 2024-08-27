@@ -7,7 +7,7 @@ import { useSession } from "next-auth/react";
 import React, { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { ed25519 } from "@noble/curves/ed25519";
-import { verifyMessageAndUpdatePublicKey } from "./_actions";
+import { removeWallet, verifyMessageAndUpdatePublicKey } from "./_actions";
 import bs58 from "bs58";
 import { Check } from "lucide-react";
 const Page = () => {
@@ -39,6 +39,7 @@ const Page = () => {
         publicKey: publicKey.toBase58(),
         message: rawMessage,
       });
+      _session.update({ ..._session.data });
       toast.success("Success!", { id: toastId });
     } catch (err: any) {
       toast.error(err?.message || "Something went wrong ", { id: toastId });
@@ -82,6 +83,16 @@ const Page = () => {
               <Button
                 className="text-red-500 border-red-500 hover:bg-red-500 hover:text-white duration-300 "
                 variant={"outline"}
+                onClick={async () => {
+                  const id = toast.loading("Processing the request");
+                  const res = await removeWallet();
+                  if (res.status === 200) {
+                    toast.success(res.message, { id });
+                    _session.update({ ..._session.data });
+                  } else {
+                    toast.error(res.message, { id });
+                  }
+                }}
               >
                 Unlink Wallet
               </Button>
