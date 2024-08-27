@@ -19,7 +19,7 @@ const organizationBasicValidation = z.object({
     balance: z.number(),
     userId: z.string(),
     allowedDispancers: z.array(z.string()),
-    publickKey: z.string().optional().nullable(),
+    publicKey: z.string().optional().nullable(),
   }),
 });
 export function verifyUserBasicAuth(

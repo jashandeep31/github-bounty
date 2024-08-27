@@ -17,12 +17,15 @@ import {
 } from "@repo/ui/dropdown";
 import { useWalletProvider } from "@/providers/walletContextProvider";
 
-const navbarDesktopLinks: { name: string; link: string }[] = [
-  { name: "Home", link: "/" },
-  { name: "Docs", link: "/dashboard/payouts" },
-  { name: "Payouts", link: "/dashboard/payouts" },
-  { name: "Wallet", link: "/dashboard/wallet" },
-  { name: "About Us", link: "/about" },
+const navbarDesktopLinks: { name: string; link: string; newTab: boolean }[] = [
+  { name: "Home", link: "/", newTab: false },
+  {
+    name: "Docs",
+    link: "https://jashandeep.notion.site/Docs-of-GitSol-8ba6ea37503a46829caecfe54bc3f637",
+    newTab: true,
+  },
+  { name: "Payouts", link: "/dashboard/payouts", newTab: false },
+  { name: "Wallet", link: "/dashboard/wallet", newTab: false },
 ];
 
 export default function Navbar() {
@@ -54,7 +57,7 @@ export default function Navbar() {
   );
 
   return (
-    <div className="py-3">
+    <div className="py-3 bg-background ">
       <div className="container flex items-center justify-between">
         <div className="flex items-center gap-6 ">
           <Link href={"/"} className="text-lg font-bold flex flex-col ">
@@ -66,7 +69,12 @@ export default function Navbar() {
                 key={index}
                 className="text-sm text-muted-foreground font-medium hover:text-foreground duration-300"
               >
-                <Link href={link.link}>{link.name}</Link>
+                <Link
+                  target={link.newTab ? "_blank" : "_self"}
+                  href={link.link}
+                >
+                  {link.name}
+                </Link>
               </nav>
             ))}
           </div>

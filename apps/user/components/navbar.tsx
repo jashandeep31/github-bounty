@@ -16,13 +16,16 @@ import {
   DropdownMenuTrigger,
 } from "@repo/ui/dropdown";
 
-const navbarDesktopLinks: { name: string; link: string }[] = [
-  { name: "Home", link: "/" },
-  { name: "Docs", link: "/dashboard" },
-  { name: "Dashboard", link: "/dashboard" },
-  { name: "All Bounties", link: "/bounties" },
-  { name: "Explore Projects", link: "/projects" },
-  { name: "Wallet", link: "/wallet" },
+const navbarDesktopLinks: { name: string; link: string; newTab: boolean }[] = [
+  { name: "Home", link: "/", newTab: false },
+  { name: "All Bounties", link: "/bounties", newTab: false },
+  { name: "Explore Projects", link: "/projects", newTab: false },
+  {
+    name: "Docs",
+    link: "https://jashandeep.notion.site/Docs-of-GitSol-8ba6ea37503a46829caecfe54bc3f637",
+    newTab: true,
+  },
+  { name: "Wallet", link: "/wallet", newTab: false },
 ];
 
 export default function Navbar() {
@@ -65,7 +68,12 @@ export default function Navbar() {
                 key={index}
                 className={`text-sm ${pathname === link.link ? "text-foreground underline" : "text-muted-foreground"} font-medium hover:text-foreground duration-300`}
               >
-                <Link href={link.link}>{link.name}</Link>
+                <Link
+                  href={link.link}
+                  target={link.newTab ? "_blank" : "_self"}
+                >
+                  {link.name}
+                </Link>
               </nav>
             ))}
           </div>

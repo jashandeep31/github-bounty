@@ -19,6 +19,7 @@ export default async function page() {
         {repos.map((repo) => (
           <Link
             href={repo.link}
+            target="_blank"
             key={repo.id}
             className="border rounded-md p-3 hover:scale-105 duration-300"
           >
