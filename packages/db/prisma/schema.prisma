@@ -81,7 +81,7 @@ model Organization {
   name              String              @unique // same the user name 
   image             String?
   email             String // to send emails of bounties and etc
-  balance           Float
+  balance           Float               @default(0)
   userId            String              @unique
   user              User                @relation(fields: [userId], references: [id])
   allowedDispancers String[]
