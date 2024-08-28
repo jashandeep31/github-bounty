@@ -4,6 +4,9 @@ import { db } from "@/lib/db";
 
 import React from "react";
 import PayoutsTable from "./components/PayoutsTable";
+import Link from "next/link";
+import { buttonVariants } from "@repo/ui/button";
+import { cn } from "@repo/ui/utils";
 
 async function getPayouts(orgId: string, page: number) {
   return await db.payout.findMany({
@@ -45,6 +48,22 @@ export default async function page({
         List of all payouts currently going on.
       </p>
       <PayoutsTable payouts={payouts} />
+
+      {payouts.length === 0 && (
+        <div className="flex flex-col gap-6  py-12 items-center">
+          <h1 className="text-xl font-bold text-muted-foreground  ">
+            You don&apos;t have any payouts. Please create one.
+          </h1>
+          <Link
+            href={
+              "https://jashandeep.notion.site/Docs-of-GitSol-8ba6ea37503a46829caecfe54bc3f637"
+            }
+            className={cn(buttonVariants())}
+          >
+            Check Docs
+          </Link>
+        </div>
+      )}
     </div>
   );
 }

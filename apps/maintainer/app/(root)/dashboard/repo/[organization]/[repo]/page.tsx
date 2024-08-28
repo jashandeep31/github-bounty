@@ -4,6 +4,9 @@ import { redirect } from "next/navigation";
 import React from "react";
 import IssueCard from "./components/IssueCard";
 import { FolderGit } from "lucide-react";
+import Link from "next/link";
+import { cn } from "@repo/ui/utils";
+import { buttonVariants } from "@repo/ui/button";
 
 async function getRepo(reponame: string) {
   return await db.repo.findUnique({
@@ -57,6 +60,22 @@ export default async function page({
         {repo.Issue.map((item) => (
           <IssueCard issue={item} key={item.id} />
         ))}
+
+        {repo.Issue.length === 0 && (
+          <div className="flex flex-col gap-6  py-12 items-center">
+            <h1 className="text-xl font-bold text-muted-foreground  ">
+              You don&apos;t have any issues in this repo. Please create one.
+            </h1>
+            <Link
+              href={
+                "https://jashandeep.notion.site/Docs-of-GitSol-8ba6ea37503a46829caecfe54bc3f637"
+              }
+              className={cn(buttonVariants())}
+            >
+              Check Docs
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );

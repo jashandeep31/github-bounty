@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@repo/ui/button";
+import { Button, buttonVariants } from "@repo/ui/button";
 import { useSession } from "next-auth/react";
 import React, { Suspense, useCallback, useEffect, useState } from "react";
 import WalletActions from "./components/WalletActions";
@@ -8,6 +8,8 @@ import { getOrganizationPayments, unlinkWallet } from "./_actions";
 import { useWalletProvider } from "@/providers/walletContextProvider";
 import { useSearchParams } from "next/navigation";
 import TransactionsTable from "./components/transactionsTable";
+import Link from "next/link";
+import { cn } from "@repo/ui/utils";
 
 const PageComponent = () => {
   const searchParams = useSearchParams();
@@ -57,7 +59,9 @@ const PageComponent = () => {
           </h2>
         </div>
         <div className="mt-6 space-x-4">
-          <Button onClick={() => setWalletActionState(true)}>Add Funds</Button>
+          <Button onClick={() => setWalletActionState(true)}>
+            Add Funds / Wallet Actions
+          </Button>
 
           {session.data.organization.publicKey && (
             <Button
@@ -75,6 +79,21 @@ const PageComponent = () => {
       </div>
 
       <TransactionsTable pastPayments={pastPayments} pageNo={pageNo} />
+      {pastPayments.length === 0 && (
+        <div className="flex flex-col gap-6  py-12 items-center">
+          <h1 className="text-xl font-bold text-muted-foreground  ">
+            You don&apos;t have any payments. Please create one.
+          </h1>
+          <Link
+            href={
+              "https://jashandeep.notion.site/Docs-of-GitSol-8ba6ea37503a46829caecfe54bc3f637"
+            }
+            className={cn(buttonVariants())}
+          >
+            Check Docs
+          </Link>
+        </div>
+      )}
     </div>
   );
 };
