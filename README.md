@@ -1,3 +1,15 @@
+# DOCS
+
+## Learning curve is little high please read the docs on the notion
+
+[https://jashandeep.notion.site/Docs-of-GitSol-8ba6ea37503a46829caecfe54bc3f637](https://jashandeep.notion.site/Docs-of-GitSol-8ba6ea37503a46829caecfe54bc3f637)
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+
 # Turborepo starter
 
 This is an official starter Turborepo.
