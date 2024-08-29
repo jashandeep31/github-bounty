@@ -3,6 +3,15 @@
 ## Learning curve is little high please read the docs on the notion
 
 [https://jashandeep.notion.site/Docs-of-GitSol-8ba6ea37503a46829caecfe54bc3f637](https://jashandeep.notion.site/Docs-of-GitSol-8ba6ea37503a46829caecfe54bc3f637)
+
+
+### May the landing page go down of framer after 1k requests then please use direct links 
+Contributor:  https://gitsol.jashandeep.me/login
+Maintainer: https://maingitsol.jashandeep.me/login
+
+We are fixing this soon either by getting paid plan designing are own next js landing page
+
+
 <br/>
 <br/>
 <br/>
