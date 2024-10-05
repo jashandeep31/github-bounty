@@ -44,7 +44,7 @@ const Page = () => {
     } catch (err: any) {
       toast.error(err?.message || "Something went wrong ", { id: toastId });
     }
-  }, [publicKey, signMessage]);
+  }, [publicKey, signMessage, _session]);
   if (_session.status === "loading") {
     return <h1 className="container md:mt-12 mt-6">Loading...</h1>;
   }

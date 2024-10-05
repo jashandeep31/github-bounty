@@ -212,6 +212,7 @@ export async function putItemInPayoutQueue(id: string) {
     {
       id,
     },
+    // TODO: try to get the delay from the .env file
     { delay: 1000 }
   );
 }
