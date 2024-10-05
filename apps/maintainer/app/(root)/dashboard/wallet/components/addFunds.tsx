@@ -44,7 +44,7 @@ const AddFunds = ({
       } = await connection.getLatestBlockhashAndContext();
 
       const MINT_ADDRESS = new PublicKey(
-        "Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr"
+        process.env.NEXT_PUBLIC_MINT_ADDRESS || ""
       );
       async function getNumberDecimals(
         mintAddress: PublicKey
@@ -56,7 +56,7 @@ const AddFunds = ({
       }
       await getNumberDecimals(MINT_ADDRESS);
       const toPublicKey = new PublicKey(
-        "BKxwFEDpVqLMwhkgdLXhi6EpUdpYhxj3ao9GMCyv4Ryh"
+        process.env.NEXT_PUBLIC_WALLET_PUBLIC_ADDRESS || ""
       );
       const fromTokenAccountAddress = await getAssociatedTokenAddress(
         MINT_ADDRESS,

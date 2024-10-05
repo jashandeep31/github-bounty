@@ -13,18 +13,12 @@ const layout = ({ children }: { children: React.ReactNode }) => {
 
       <main className="grid flex-1">{children}</main>
       <footer className=" py-4 border-t mt-12">
-        <div className="container flex flex-wrap gap-3">
+        <div className="container flex flex-wrap gap-3 justify-between">
           <p>@Jashandeep31</p>
-          <p>
-            Read docs to work{" "}
-            <Link
-              href={
-                "https://jashandeep.notion.site/Docs-of-GitSol-8ba6ea37503a46829caecfe54bc3f637"
-              }
-            >
-              Docs
-            </Link>{" "}
-          </p>
+          <Link href="https://github.com/jashandeep31/github-bounty">
+            {" "}
+            Github
+          </Link>
         </div>
       </footer>
     </div>

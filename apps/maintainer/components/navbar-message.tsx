@@ -3,6 +3,7 @@ import {
   IVerifyUserBasicAuthAndBasicOrganizationValidation,
   verifyUserBasicAuthAndBasicOrganizationValidation,
 } from "@/lib/authentication";
+import { useWalletProvider } from "@/providers/walletContextProvider";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
@@ -11,6 +12,7 @@ const NavbarMessageComponent = () => {
   const _session = useSession();
   const [session, setSession] =
     useState<null | IVerifyUserBasicAuthAndBasicOrganizationValidation>(null);
+  const wallet = useWalletProvider();
 
   useEffect(() => {
     if (_session.data && _session.status === "authenticated") {
@@ -20,6 +22,7 @@ const NavbarMessageComponent = () => {
     }
   }, [_session]);
 
+  // TODO: Messages are not clear / robust eoungh need to change out the states of it.
   return (
     <div className="">
       {!session?.organization?.publicKey ? (
@@ -32,9 +35,7 @@ const NavbarMessageComponent = () => {
           </p>
         </div>
       ) : null}
-      {session?.organization?.balance &&
-      session.organization.publicKey &&
-      session?.organization?.balance < 10 ? (
+      {wallet.state === "connected" && wallet.amount < 10 ? (
         <div className="bg-blue-500 text-white text-center p-1">
           <p>
             Please top up your{" "}

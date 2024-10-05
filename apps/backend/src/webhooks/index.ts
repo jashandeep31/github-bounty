@@ -7,11 +7,7 @@ import path from "path";
 import { App } from "@octokit/app";
 import jwt from "jsonwebtoken";
 import { db } from "../lib/db.js";
-import {
-  checkDispenserPermissions,
-  fetchOrCreateIssue,
-  fetchOrCreateRepo,
-} from "./handlers.js";
+
 import { giveBounty } from "./giveBounty.js";
 import { newBounty } from "./newBounty.js";
 
@@ -178,6 +174,7 @@ async function processEvent({
       });
     } else {
       const match = body.match(/\/bounty \$(\d+(?:\.\d{1,2})?)/);
+
       if (!match) return;
       await newBounty({ issueUrl, reponame, username, body, payload, octokit });
     }
