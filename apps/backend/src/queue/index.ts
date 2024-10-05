@@ -95,9 +95,7 @@ const payoutWorker = new Worker(
         "confirmed"
       );
 
-      const MINT_ADDRESS = new PublicKey(
-        "Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr"
-      );
+      const MINT_ADDRESS = new PublicKey(process.env.MINT_ADDRESS || "");
       let sourceAccount = await getOrCreateAssociatedTokenAccount(
         connection,
         keypair,

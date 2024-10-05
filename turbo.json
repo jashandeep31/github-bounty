@@ -5,14 +5,6 @@
   "tasks": {
     "build": {
       "dependsOn": ["^db:generate", "^build"],
-      "env": [
-        "PUBLIC_BACKEND_URL",
-        "USER_URL",
-        "APP_ID",
-        "PUBLIC_MAINTAINER_URL",
-        "WALLET_PUBLIC_KEY",
-        "MINT_PUBLIC_KEY"
-      ],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": [".next/**", "!.next/cache/**"]
     },
@@ -20,14 +12,6 @@
       "dependsOn": ["^lint"]
     },
     "dev": {
-      "env": [
-        "PUBLIC_BACKEND_URL",
-        "USER_URL",
-        "APP_ID",
-        "PUBLIC_MAINTAINER_URL",
-        "WALLET_PUBLIC_KEY",
-        "MINT_PUBLIC_KEY"
-      ],
       "dependsOn": ["^db:generate"],
       "cache": false,
       "persistent": true

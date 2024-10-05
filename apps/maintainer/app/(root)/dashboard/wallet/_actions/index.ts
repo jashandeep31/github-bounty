@@ -183,26 +183,26 @@ const calculateTransferredAmount = (
   const senderBalanceBefore = preTokenBalances?.find(
     (balance) =>
       balance.accountIndex === 2 &&
-      balance.mint === "Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr"
+      balance.mint === process.env.NEXT_PUBLIC_MINT_ADDRESS
   )?.uiTokenAmount.amount;
   // this is less
   const senderBalanceAfter = postTokenBalances?.find(
     (balance) =>
       balance.accountIndex === 2 &&
-      balance.mint === "Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr"
+      balance.mint === process.env.NEXT_PUBLIC_MINT_ADDRESS
   )?.uiTokenAmount.amount;
 
   // this is less
   const receiverBalanceBefore = preTokenBalances?.find(
     (balance) =>
       balance.accountIndex === 1 &&
-      balance.mint === "Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr"
+      balance.mint === process.env.NEXT_PUBLIC_MINT_ADDRESS
   )?.uiTokenAmount.amount;
   // this is more
   const receiverBalanceAfter = postTokenBalances?.find(
     (balance) =>
       balance.accountIndex === 1 &&
-      balance.mint === "Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr"
+      balance.mint === process.env.NEXT_PUBLIC_MINT_ADDRESS
   )?.uiTokenAmount.amount;
 
   if (
