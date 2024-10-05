@@ -16,21 +16,23 @@ import {
   getOrCreateAssociatedTokenAccount,
   createTransferInstruction,
 } from "@solana/spl-token";
+import { Redis } from "ioredis";
 dotenv.config();
 
+const redisConnection = new Redis(
+  process.env.REDIS_URI || "redis://localhost:6379",
+  { maxRetriesPerRequest: null }
+);
+
 const payoutQueue = new Queue("payout-queue", {
-  connection: {
-    host: process.env.URI,
-    port: 6379,
-    username: "default",
-    password: process.env.REDIS_PASSWORD,
-  },
+  connection: redisConnection,
 });
 
 const payoutWorker = new Worker(
   "payout-queue",
   async (job) => {
     // if (1 == 1) return;
+
     try {
       const payout = await db.payout.findUnique({
         where: {
@@ -197,12 +199,7 @@ const payoutWorker = new Worker(
     }
   },
   {
-    connection: {
-      host: process.env.URI,
-      port: 6379,
-      username: "default",
-      password: process.env.REDIS_PASSWORD,
-    },
+    connection: redisConnection,
   }
 );
 export async function putItemInPayoutQueue(id: string) {

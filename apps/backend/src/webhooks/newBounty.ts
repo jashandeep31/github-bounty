@@ -22,6 +22,7 @@ export const newBounty = async ({
 }) => {
   // TODO: wrap this in to a transaction
   const match = body.match(/\/bounty \$(\d+(?:\.\d{1,2})?)/);
+
   if (!match) return;
   const repo = await fetchOrCreateRepo(reponame);
   const organization = repo.organization;
